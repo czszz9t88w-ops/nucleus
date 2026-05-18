@@ -1,0 +1,44 @@
+name: Preview (PR)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  preview:
+    name: Vercel Preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost/nucleus
+
+      - name: Deploy Preview
+        id: vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+
+      - name: Comment Preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🚀 Preview Deployed\n\n**URL:** ${{ steps.vercel.outputs.preview-url }}\n\nScreens available:\n- \`/\` — Landing page\n- \`/login\` — Login\n- \`/home\` — Class selection\n- \`/subject/6/maths\` — Class 6 Maths chapters\n- \`/chapter/6-maths-1\` — Chapter hub\n- \`/chapter/6-maths-1/video\` — Video player\n- \`/chapter/6-maths-1/notes\` — Chapter notes\n- \`/chapter/6-maths-1/worksheet/mcq\` — MCQ worksheet`
+            })
