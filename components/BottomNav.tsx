@@ -3,17 +3,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const items = [
-  { href: "/home",    icon: "🏠", label: "Home" },
-  { href: "/subject", icon: "📖", label: "Learn" },
-  { href: "/progress",icon: "📊", label: "Progress" },
-  { href: "/profile", icon: "👤", label: "Profile" },
+  { href: "/home",     icon: "🏠", label: "Home",     exact: true },
+  { href: "/home",     icon: "📖", label: "Learn",    exact: false },
+  { href: "/progress", icon: "📊", label: "Progress", exact: false },
+  { href: "/setup",    icon: "👤", label: "Profile",  exact: false },
 ];
 
 export default function BottomNav() {
   const pathname = usePathname();
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 safe-bottom"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 safe-bottom"
       style={{
         background: "rgba(10,11,26,0.92)",
         borderTop: "1px solid rgba(255,255,255,0.08)",
@@ -22,7 +22,7 @@ export default function BottomNav() {
     >
       <div className="flex justify-around px-2 py-2">
         {items.map((item) => {
-          const active = pathname.startsWith(item.href);
+          const active = item.exact ? pathname === item.href : (item.href !== "/home" && pathname.startsWith(item.href)) || (item.label === "Learn" && (pathname.startsWith("/class") || pathname.startsWith("/subject") || pathname.startsWith("/chapter")));
           return (
             <Link
               key={item.href}
