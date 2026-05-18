@@ -1,38 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { cacheGet, cacheSet } from "@/lib/redis";
+import { NextResponse } from "next/server";
+import curriculumChapters from "@/data/curriculum";
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const subject = searchParams.get("subject");
-  const classNum = searchParams.get("class");
+// Static export: GET handler must not read from the Request object.
+// Returns the curriculum list derived from static data.
+export const dynamic = "force-static";
 
-  const cacheKey = `content:${classNum}:${subject || "all"}`;
-  const cached = await cacheGet(cacheKey);
-  if (cached) return NextResponse.json(cached);
-
-  const content = await prisma.content.findMany({
-    where: {
-      isActive: true,
-      ...(classNum ? { class: Number(classNum) } : {}),
-      ...(subject ? { subject } : {}),
-    },
-    orderBy: [{ chapter: "asc" }, { topic: "asc" }],
-    select: {
-      id: true,
-      title: true,
-      titleHi: true,
-      subject: true,
-      class: true,
-      chapter: true,
-      topic: true,
-      type: true,
-      videoUrl: true,
-      durationSec: true,
-      xpReward: true,
-    },
-  });
-
-  await cacheSet(cacheKey, content, 600);
+export async function GET() {
+  const content = curriculumChapters.map((c) => ({
+    id: c.id,
+    title: c.title,
+    subject: c.subject,
+    class: c.classNum,
+    chapter: c.num,
+    type: "SUMMARY",
+    videoUrl: c.videoId ? `https://www.youtube.com/embed/${c.videoId}` : null,
+    xpReward: 10,
+  }));
   return NextResponse.json(content);
 }

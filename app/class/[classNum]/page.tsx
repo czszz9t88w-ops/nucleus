@@ -3,6 +3,10 @@ import Stars from "@/components/Stars";
 import BottomNav from "@/components/BottomNav";
 import Chatbot from "@/components/Chatbot";
 
+export function generateStaticParams() {
+  return [{ classNum: "6" }, { classNum: "7" }, { classNum: "8" }];
+}
+
 const subjectConfig = {
   maths:   { icon: "🔢", label: "Mathematics", book: "Ganita Prakash 2026", color: "#7C3AED", chapters: { 6: 10, 7: 13, 8: 16 } },
   science: { icon: "🔬", label: "Science",     book: "Curiosity 2026",      color: "#06B6D4", chapters: { 6: 10, 7: 13, 8: 16 } },

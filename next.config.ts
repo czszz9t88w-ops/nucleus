@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isStaticExport = process.env.STATIC_EXPORT === "1";
+
 // next-pwa uses webpack; when Turbopack is active (Next.js 16 default in dev),
 // the service worker is built on first `next build` (webpack mode).
 const withPWA = require("next-pwa")({
@@ -30,9 +32,11 @@ const withPWA = require("next-pwa")({
 });
 
 const nextConfig: NextConfig = {
-  // Turbopack config (empty = use defaults). next-pwa webpack plugin applies during `next build`.
+  ...(isStaticExport && { output: "export" }),
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
   turbopack: {},
   images: {
+    unoptimized: isStaticExport,
     remotePatterns: [
       { protocol: "https", hostname: "stream.mux.com" },
       { protocol: "https", hostname: "image.mux.com" },
@@ -40,4 +44,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-module.exports = withPWA(nextConfig);
+module.exports = isStaticExport ? nextConfig : withPWA(nextConfig);

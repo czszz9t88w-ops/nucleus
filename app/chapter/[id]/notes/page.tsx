@@ -1,14 +1,16 @@
-"use client";
-import { use } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Stars from "@/components/Stars";
 import Chatbot from "@/components/Chatbot";
-import { getChapterById } from "@/data/curriculum";
+import chapters, { getChapterById } from "@/data/curriculum";
 import { getChapterContent, getDefaultContent } from "@/data/content";
 
-export default function NotesPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export function generateStaticParams() {
+  return chapters.map((c) => ({ id: c.id }));
+}
+
+export default async function NotesPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const chapter = getChapterById(id);
   if (!chapter) return notFound();
 
@@ -31,7 +33,6 @@ export default function NotesPage({ params }: { params: Promise<{ id: string }> 
       <div className="relative z-10 px-5 space-y-4">
         {content.notes.map((note, i) => (
           <div key={i} className="glass rounded-2xl p-5 slide-up" style={{ animationDelay: `${i * 0.1}s` }}>
-            {/* Page indicator */}
             <div className="flex items-center gap-2 mb-3">
               <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
                 style={{ background: "linear-gradient(135deg,#7C3AED,#06B6D4)" }}>{i + 1}</div>
@@ -50,7 +51,6 @@ export default function NotesPage({ params }: { params: Promise<{ id: string }> 
           </div>
         ))}
 
-        {/* Navigation */}
         <div className="grid grid-cols-2 gap-3 mt-2">
           <Link href={`/chapter/${id}/snippets`}
             className="glass flex items-center justify-center gap-2 py-3 rounded-xl text-sm text-slate-300 active:scale-95 transition-transform">

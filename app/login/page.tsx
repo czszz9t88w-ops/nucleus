@@ -140,6 +140,18 @@ export default function LoginPage() {
           New student?{" "}
           <Link href="/setup" className="text-purple-400 underline">Set up profile</Link>
         </p>
+
+        <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <button
+            onClick={() => {
+              localStorage.setItem("nucleus_profile", JSON.stringify({ name: "Demo Student", class: 6 }));
+              router.push("/home");
+            }}
+            className="w-full py-3 rounded-2xl font-semibold text-sm transition-transform active:scale-95"
+            style={{ background: "rgba(255,255,255,0.06)", color: "#94A3B8", border: "1px solid rgba(255,255,255,0.1)" }}>
+            Try Demo (no login needed) →
+          </button>
+        </div>
       </div>
     </div>
   );

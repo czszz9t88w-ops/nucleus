@@ -1,24 +1,26 @@
-"use client";
-import { use } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Stars from "@/components/Stars";
 import BottomNav from "@/components/BottomNav";
 import Chatbot from "@/components/Chatbot";
-import { getChapterById } from "@/data/curriculum";
+import chapters, { getChapterById } from "@/data/curriculum";
 
-const subColor = { maths: "#7C3AED", science: "#06B6D4" };
+export function generateStaticParams() {
+  return chapters.map((c) => ({ id: c.id }));
+}
+
+const subColor: Record<string, string> = { maths: "#7C3AED", science: "#06B6D4" };
 
 const menu = [
-  { key: "video",          icon: "▶️",  label: "Video Lesson",         sub: "Watch explanation",       href: (id:string) => `/chapter/${id}/video` },
-  { key: "notes",          icon: "📝",  label: "Chapter Notes",        sub: "3-4 pages summarised",    href: (id:string) => `/chapter/${id}/notes` },
-  { key: "snippets",       icon: "💡",  label: "Snippets",             sub: "Key terms & formulas",    href: (id:string) => `/chapter/${id}/snippets` },
-  { key: "mcq",            icon: "✅",  label: "MCQ + Assertion Worksheet", sub: "2 worksheets · 10 Q each", href: (id:string) => `/chapter/${id}/worksheet/mcq` },
-  { key: "qa",             icon: "✍️",  label: "Q&A Worksheet",        sub: "2 worksheets · 10 Q each", href: (id:string) => `/chapter/${id}/worksheet/qa` },
+  { key: "video",    icon: "▶️",  label: "Video Lesson",              sub: "Watch explanation",         href: (id: string) => `/chapter/${id}/video` },
+  { key: "notes",    icon: "📝",  label: "Chapter Notes",             sub: "3-4 pages summarised",      href: (id: string) => `/chapter/${id}/notes` },
+  { key: "snippets", icon: "💡",  label: "Snippets",                  sub: "Key terms & formulas",      href: (id: string) => `/chapter/${id}/snippets` },
+  { key: "mcq",      icon: "✅",  label: "MCQ + Assertion Worksheet", sub: "2 worksheets · 10 Q each",  href: (id: string) => `/chapter/${id}/worksheet/mcq` },
+  { key: "qa",       icon: "✍️",  label: "Q&A Worksheet",             sub: "2 worksheets · 10 Q each",  href: (id: string) => `/chapter/${id}/worksheet/qa` },
 ];
 
-export default function ChapterPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default async function ChapterPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const chapter = getChapterById(id);
   if (!chapter) return notFound();
 
@@ -29,7 +31,6 @@ export default function ChapterPage({ params }: { params: Promise<{ id: string }
       style={{ background: "radial-gradient(ellipse at top, #0D1030 0%, #06070F 70%)" }}>
       <Stars />
 
-      {/* Header */}
       <div className="relative z-10 px-5 pt-12 pb-4 flex items-start gap-3">
         <Link href={`/subject/${chapter.classNum}/${chapter.subject}`}
           className="w-9 h-9 glass rounded-xl flex items-center justify-center text-slate-400 flex-shrink-0 mt-1">‹</Link>
@@ -45,7 +46,6 @@ export default function ChapterPage({ params }: { params: Promise<{ id: string }
         </div>
       </div>
 
-      {/* Progress bar */}
       <div className="relative z-10 px-5 mb-4">
         <div className="glass rounded-xl p-3 flex items-center gap-3">
           <span className="text-xs text-slate-500">Chapter progress</span>
@@ -56,7 +56,6 @@ export default function ChapterPage({ params }: { params: Promise<{ id: string }
         </div>
       </div>
 
-      {/* Menu */}
       <div className="relative z-10 px-5 space-y-3">
         {menu.map((item, i) => (
           <Link key={item.key} href={item.href(id)}

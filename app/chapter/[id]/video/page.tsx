@@ -1,13 +1,15 @@
-"use client";
-import { use } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Stars from "@/components/Stars";
 import Chatbot from "@/components/Chatbot";
-import { getChapterById } from "@/data/curriculum";
+import chapters, { getChapterById } from "@/data/curriculum";
 
-export default function VideoPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export function generateStaticParams() {
+  return chapters.map((c) => ({ id: c.id }));
+}
+
+export default async function VideoPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const chapter = getChapterById(id);
   if (!chapter) return notFound();
 
@@ -18,7 +20,6 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
       style={{ background: "radial-gradient(ellipse at top, #0D1030 0%, #06070F 70%)" }}>
       <Stars />
 
-      {/* Header */}
       <div className="relative z-10 px-5 pt-10 pb-4 flex items-center gap-3">
         <Link href={`/chapter/${id}`} className="w-9 h-9 glass rounded-xl flex items-center justify-center text-slate-400">‹</Link>
         <div className="flex-1 min-w-0">
@@ -27,7 +28,6 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
         </div>
       </div>
 
-      {/* Video player */}
       <div className="relative z-10 px-4 mb-6">
         <div className="rounded-2xl overflow-hidden" style={{ aspectRatio: "16/9", background: "#000" }}>
           {videoId ? (
@@ -48,7 +48,6 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
         </div>
       </div>
 
-      {/* Chapter info */}
       <div className="relative z-10 px-5 space-y-3">
         <div className="glass rounded-2xl p-4">
           <h2 className="font-bold text-white mb-1">{chapter.emoji} {chapter.title}</h2>
@@ -59,13 +58,12 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
           </div>
         </div>
 
-        {/* Quick actions */}
         <div className="grid grid-cols-2 gap-3">
           {[
-            { href: `/chapter/${id}/notes`,    icon: "📝", label: "View Notes" },
-            { href: `/chapter/${id}/snippets`, icon: "💡", label: "Key Terms" },
-            { href: `/chapter/${id}/worksheet/mcq`, icon: "✅", label: "MCQ Practice" },
-            { href: `/chapter/${id}/worksheet/qa`,  icon: "✍️", label: "Q&A Practice" },
+            { href: `/chapter/${id}/notes`,          icon: "📝", label: "View Notes" },
+            { href: `/chapter/${id}/snippets`,        icon: "💡", label: "Key Terms" },
+            { href: `/chapter/${id}/worksheet/mcq`,   icon: "✅", label: "MCQ Practice" },
+            { href: `/chapter/${id}/worksheet/qa`,    icon: "✍️", label: "Q&A Practice" },
           ].map((a) => (
             <Link key={a.href} href={a.href}
               className="glass flex items-center gap-2 px-3 py-3 rounded-xl active:scale-95 transition-transform">
