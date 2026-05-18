@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  --brand-teal: #1A5F8A;
+  --brand-teal-light: #2E7FB5;
+  --brand-amber: #F5A623;
+  --brand-amber-light: #F8BC5A;
+  --brand-green: #27AE60;
+  --brand-red: #E74C3C;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --color-teal: var(--brand-teal);
+  --color-teal-light: var(--brand-teal-light);
+  --color-amber: var(--brand-amber);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  overscroll-behavior: none;
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
