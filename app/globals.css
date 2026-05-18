@@ -1,37 +1,102 @@
 @import "tailwindcss";
 
 :root {
-  --brand-teal: #1A5F8A;
-  --brand-teal-light: #2E7FB5;
-  --brand-amber: #F5A623;
-  --brand-amber-light: #F8BC5A;
-  --brand-green: #27AE60;
-  --brand-red: #E74C3C;
+  --space-dark:   #06070F;
+  --space-deep:   #0A0B1A;
+  --space-mid:    #0D1030;
+  --nebula-purple:#7C3AED;
+  --nebula-light: #A855F7;
+  --star-gold:    #F59E0B;
+  --star-white:   #E2E8F0;
+  --cosmic-teal:  #06B6D4;
+  --nova-red:     #EF4444;
+  --glass-bg:     rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.12);
 }
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
-  --color-teal: var(--brand-teal);
-  --color-teal-light: var(--brand-teal-light);
-  --color-amber: var(--brand-amber);
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
+* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 
 body {
+  background: var(--space-dark);
+  color: var(--star-white);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   overscroll-behavior: none;
+  min-height: 100vh;
 }
 
-.safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
+/* ── Glassmorphism card ─────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── Star field animation ───────────────────────────── */
+@keyframes twinkle {
+  0%,100% { opacity: 0.2; transform: scale(0.8); }
+  50%      { opacity: 1;   transform: scale(1.2); }
+}
+@keyframes drift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-4px); }
+}
+@keyframes float {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes pulse-glow {
+  0%,100% { box-shadow: 0 0 12px rgba(124,58,237,0.4); }
+  50%      { box-shadow: 0 0 28px rgba(124,58,237,0.8), 0 0 48px rgba(124,58,237,0.3); }
+}
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.star { animation: twinkle 2s infinite; }
+.float { animation: float 3s ease-in-out infinite; }
+.pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.slide-up { animation: slideUp 0.4s ease-out forwards; }
+
+/* ── Gradient text ──────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #A855F7, #06B6D4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gold-text {
+  background: linear-gradient(135deg, #F59E0B, #FDE68A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.5); border-radius: 2px; }
+
+/* ── Bottom nav safe area ───────────────────────────── */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ── Progress bar ───────────────────────────────────── */
+.progress-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--nebula-purple), var(--cosmic-teal));
+  border-radius: 2px;
+  transition: width 0.4s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

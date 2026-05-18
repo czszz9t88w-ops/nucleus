@@ -1,197 +1,145 @@
 "use client";
-
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Stars from "@/components/Stars";
 
-type Step = "phone" | "otp" | "profile";
+type Tab = "email" | "phone";
+type PhoneStep = "phone" | "otp";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [step, setStep] = useState<Step>("phone");
+  const [tab, setTab] = useState<Tab>("email");
+
+  // Email state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // Phone state
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
-  const [name, setName] = useState("");
-  const [studentClass, setStudentClass] = useState<6 | 7 | 8 | null>(null);
-  const [language, setLanguage] = useState<"hi" | "en">("hi");
+  const [phoneStep, setPhoneStep] = useState<PhoneStep>("phone");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  async function handleEmailLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    if (!email || !password) { setError("Please fill all fields"); return; }
+    setLoading(true);
+    // In real app: Firebase email/password auth
+    setTimeout(() => { setLoading(false); router.push("/setup"); }, 800);
+  }
+
   async function handleSendOTP() {
     setError("");
-    if (!/^[6-9]\d{9}$/.test(phone)) {
-      setError("कृपया सही मोबाइल नंबर डालें / Please enter a valid Indian mobile number");
-      return;
-    }
+    if (!/^[6-9]\d{9}$/.test(phone)) { setError("Enter a valid 10-digit Indian mobile number"); return; }
     setLoading(true);
-    const res = await fetch("/api/auth/send-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone }),
-    });
-    setLoading(false);
-    if (res.ok) {
-      setStep("otp");
-    } else {
-      setError("OTP भेजने में समस्या / Failed to send OTP");
-    }
+    try {
+      const res = await fetch("/api/auth/send-otp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ phone }) });
+      if (res.ok) setPhoneStep("otp"); else setError("Failed to send OTP. Try again.");
+    } catch { setError("Network error. Try again."); }
+    finally { setLoading(false); }
   }
 
   async function handleVerifyOTP() {
     setError("");
+    if (otp.length !== 6) { setError("Enter the 6-digit OTP"); return; }
     setLoading(true);
-    const res = await fetch("/api/auth/verify-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone, otp }),
-    });
-    setLoading(false);
-    const data = await res.json();
-    if (res.ok) {
-      if (data.isNew) {
-        setStep("profile");
-      } else {
-        router.push("/dashboard");
-      }
-    } else {
-      setError("गलत OTP / Invalid OTP");
-    }
-  }
-
-  async function handleProfileSubmit() {
-    setError("");
-    if (!name.trim() || !studentClass) {
-      setError("कृपया सभी जानकारी भरें / Please fill all details");
-      return;
-    }
-    setLoading(true);
-    const res = await fetch("/api/auth/verify-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone, otp, name, class: studentClass, language }),
-    });
-    setLoading(false);
-    if (res.ok) {
-      router.push("/onboarding");
-    } else {
-      setError("कुछ गड़बड़ हुई / Something went wrong");
-    }
+    try {
+      const res = await fetch("/api/auth/verify-otp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ phone, otp }) });
+      const data = await res.json();
+      if (res.ok) router.push(data.isNew ? "/setup" : "/home"); else setError("Invalid OTP. Try again.");
+    } catch { setError("Network error. Try again."); }
+    finally { setLoading(false); }
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "#1A5F8A" }}>
-      <div className="flex-1 flex flex-col justify-end">
-        <div className="bg-white rounded-t-3xl p-6 pb-10">
-          {step === "phone" && (
-            <>
-              <h2 className="text-2xl font-bold mb-1 text-gray-900">नमस्ते! 👋</h2>
-              <p className="text-gray-500 text-sm mb-6">अपना मोबाइल नंबर डालें / Enter your mobile number</p>
-              <div className="flex gap-2 mb-4">
-                <span className="flex items-center px-3 bg-gray-100 rounded-xl text-gray-600 font-medium">+91</span>
-                <input
-                  type="tel"
-                  inputMode="numeric"
-                  maxLength={10}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                  placeholder="10-digit number"
-                  className="flex-1 px-4 py-3 bg-gray-100 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-              <button
-                onClick={handleSendOTP}
-                disabled={loading || phone.length !== 10}
-                className="w-full py-4 rounded-2xl font-semibold text-lg text-white disabled:opacity-50 transition-transform active:scale-95"
-                style={{ background: "#1A5F8A" }}
-              >
-                {loading ? "भेज रहे हैं..." : "OTP भेजें / Send OTP"}
-              </button>
-            </>
-          )}
+    <div className="relative min-h-screen flex flex-col justify-end overflow-hidden"
+      style={{ background: "radial-gradient(ellipse at top, #0D1030 0%, #06070F 70%)" }}>
+      <Stars />
 
-          {step === "otp" && (
-            <>
-              <h2 className="text-2xl font-bold mb-1 text-gray-900">OTP डालें 🔢</h2>
-              <p className="text-gray-500 text-sm mb-6">+91 {phone} पर भेजा गया</p>
-              <input
-                type="tel"
-                inputMode="numeric"
-                maxLength={6}
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                placeholder="6-digit OTP"
-                className="w-full px-4 py-3 bg-gray-100 rounded-xl text-2xl text-center tracking-widest mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-              <button
-                onClick={handleVerifyOTP}
-                disabled={loading || otp.length !== 6}
-                className="w-full py-4 rounded-2xl font-semibold text-lg text-white disabled:opacity-50 transition-transform active:scale-95"
-                style={{ background: "#1A5F8A" }}
-              >
-                {loading ? "जांच रहे हैं..." : "सत्यापित करें / Verify"}
-              </button>
-              <button onClick={() => setStep("phone")} className="w-full mt-3 text-gray-500 text-sm">
-                ← वापस जाएं / Go back
-              </button>
-            </>
-          )}
+      {/* Top branding */}
+      <div className="relative z-10 text-center pt-16 pb-8 px-4">
+        <div className="text-5xl mb-3">⚛️</div>
+        <h1 className="text-3xl font-black gradient-text">Nucleus</h1>
+        <p className="text-slate-500 text-sm mt-1">Sign in to continue learning</p>
+      </div>
 
-          {step === "profile" && (
-            <>
-              <h2 className="text-2xl font-bold mb-1 text-gray-900">आपका परिचय 🎓</h2>
-              <p className="text-gray-500 text-sm mb-6">Tell us about yourself</p>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="आपका नाम / Your name"
-                className="w-full px-4 py-3 bg-gray-100 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <p className="text-sm text-gray-600 mb-2 font-medium">आप किस कक्षा में हैं? / Your class?</p>
-              <div className="flex gap-3 mb-4">
-                {[6, 7, 8].map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setStudentClass(c as 6 | 7 | 8)}
-                    className={`flex-1 py-3 rounded-xl font-semibold text-lg transition-colors ${
-                      studentClass === c
-                        ? "text-white"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                    style={studentClass === c ? { background: "#1A5F8A" } : {}}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
-              <p className="text-sm text-gray-600 mb-2 font-medium">भाषा / Language</p>
-              <div className="flex gap-3 mb-6">
-                {(["hi", "en"] as const).map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => setLanguage(l)}
-                    className={`flex-1 py-3 rounded-xl font-semibold transition-colors ${
-                      language === l ? "text-white" : "bg-gray-100 text-gray-600"
-                    }`}
-                    style={language === l ? { background: "#F5A623" } : {}}
-                  >
-                    {l === "hi" ? "हिंदी" : "English"}
-                  </button>
-                ))}
-              </div>
-              {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-              <button
-                onClick={handleProfileSubmit}
-                disabled={loading}
-                className="w-full py-4 rounded-2xl font-semibold text-lg text-white disabled:opacity-50 transition-transform active:scale-95"
-                style={{ background: "#1A5F8A" }}
-              >
-                {loading ? "सहेज रहे हैं..." : "शुरू करें / Let's Go 🚀"}
-              </button>
-            </>
-          )}
+      {/* Card */}
+      <div className="relative z-10 rounded-t-3xl px-6 pt-6 pb-10"
+        style={{ background: "#0D1030", border: "1px solid rgba(255,255,255,0.08)", borderBottom: "none" }}>
+
+        {/* Tab switcher */}
+        <div className="flex glass rounded-xl p-1 mb-6">
+          {(["email","phone"] as Tab[]).map((t) => (
+            <button key={t} onClick={() => { setTab(t); setError(""); setPhoneStep("phone"); }}
+              className="flex-1 py-2 rounded-lg text-sm font-semibold transition-all"
+              style={{ background: tab===t ? "linear-gradient(135deg,#7C3AED,#06B6D4)" : "transparent", color: tab===t ? "#fff" : "#64748B" }}>
+              {t === "email" ? "📧 Email" : "📱 Phone OTP"}
+            </button>
+          ))}
         </div>
+
+        {/* Email form */}
+        {tab === "email" && (
+          <form onSubmit={handleEmailLogin} className="space-y-3">
+            <input type="email" placeholder="Email address" value={email} onChange={e=>setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+              style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)" }} />
+            <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+              style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)" }} />
+            {error && <p className="text-red-400 text-sm">{error}</p>}
+            <button type="submit" disabled={loading}
+              className="w-full py-4 rounded-2xl font-bold text-lg text-white disabled:opacity-50 transition-transform active:scale-95"
+              style={{ background:"linear-gradient(135deg,#7C3AED,#06B6D4)" }}>
+              {loading ? "Signing in…" : "Sign In →"}
+            </button>
+          </form>
+        )}
+
+        {/* Phone OTP form */}
+        {tab === "phone" && phoneStep === "phone" && (
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <span className="flex items-center px-3 py-3 rounded-xl text-slate-400 text-sm font-semibold"
+                style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)" }}>+91</span>
+              <input type="tel" inputMode="numeric" maxLength={10} placeholder="10-digit mobile number"
+                value={phone} onChange={e=>setPhone(e.target.value.replace(/\D/g,""))}
+                className="flex-1 px-4 py-3 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-500 text-lg tracking-wider"
+                style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)" }} />
+            </div>
+            {error && <p className="text-red-400 text-sm">{error}</p>}
+            <button onClick={handleSendOTP} disabled={loading || phone.length!==10}
+              className="w-full py-4 rounded-2xl font-bold text-lg text-white disabled:opacity-50 transition-transform active:scale-95"
+              style={{ background:"linear-gradient(135deg,#7C3AED,#06B6D4)" }}>
+              {loading ? "Sending OTP…" : "Send OTP →"}
+            </button>
+          </div>
+        )}
+
+        {tab === "phone" && phoneStep === "otp" && (
+          <div className="space-y-3">
+            <p className="text-slate-400 text-sm text-center">OTP sent to +91 {phone}</p>
+            <input type="tel" inputMode="numeric" maxLength={6} placeholder="Enter 6-digit OTP"
+              value={otp} onChange={e=>setOtp(e.target.value.replace(/\D/g,""))}
+              className="w-full px-4 py-4 rounded-xl text-white text-3xl text-center tracking-[0.4em] placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
+              style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)" }} />
+            {error && <p className="text-red-400 text-sm">{error}</p>}
+            <button onClick={handleVerifyOTP} disabled={loading||otp.length!==6}
+              className="w-full py-4 rounded-2xl font-bold text-lg text-white disabled:opacity-50 transition-transform active:scale-95"
+              style={{ background:"linear-gradient(135deg,#7C3AED,#06B6D4)" }}>
+              {loading ? "Verifying…" : "Verify & Continue →"}
+            </button>
+            <button onClick={()=>setPhoneStep("phone")} className="w-full text-slate-500 text-sm py-2">← Change number</button>
+          </div>
+        )}
+
+        <p className="text-center text-slate-600 text-xs mt-6">
+          New student?{" "}
+          <Link href="/setup" className="text-purple-400 underline">Set up profile</Link>
+        </p>
       </div>
     </div>
   );
