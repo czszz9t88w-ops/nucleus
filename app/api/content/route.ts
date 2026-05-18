@@ -13,7 +13,6 @@ export async function GET() {
     class: c.classNum,
     chapter: c.num,
     type: "SUMMARY",
-    videoUrl: c.videoId ? `https://www.youtube.com/embed/${c.videoId}` : null,
     xpReward: 10,
   }));
   return NextResponse.json(content);

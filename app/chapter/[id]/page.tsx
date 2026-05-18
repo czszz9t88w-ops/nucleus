@@ -13,7 +13,6 @@ export function generateStaticParams() {
 const subColor: Record<string, string> = { maths: "#7C3AED", science: "#06B6D4" };
 
 const menu = [
-  { key:"video",    icon:"▶️",  label:"Video Lesson",              sub:"Watch explanation",         href:(id:string)=>`/chapter/${id}/video` },
   { key:"notes",    icon:"📝",  label:"Chapter Notes",             sub:"3–4 pages summarised",      href:(id:string)=>`/chapter/${id}/notes` },
   { key:"snippets", icon:"💡",  label:"Snippets",                  sub:"Key terms & formulas",      href:(id:string)=>`/chapter/${id}/snippets` },
   { key:"mcq",      icon:"✅",  label:"MCQ + Assertion Worksheet", sub:"2 worksheets · 10 Q each",  href:(id:string)=>`/chapter/${id}/worksheet/mcq` },

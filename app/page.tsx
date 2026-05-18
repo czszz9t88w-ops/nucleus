@@ -2,12 +2,12 @@ import Link from "next/link";
 import Stars from "@/components/Stars";
 
 const features = [
-  { icon: "▶️", title: "Video Lessons",       desc: "Chapter-wise explanations aligned to NCERT 2026 syllabus" },
   { icon: "📝", title: "Chapter Notes",        desc: "3–4 pages of summarised notes with key highlights" },
   { icon: "💡", title: "Snippets",             desc: "Tap-to-flip flashcards for every term, formula and definition" },
   { icon: "✅", title: "MCQ Worksheets",       desc: "10 questions each, including Assertion-Reason format (CBSE)" },
   { icon: "✍️", title: "Q&A Worksheets",       desc: "Short and long answer practice with detailed model answers" },
   { icon: "🤖", title: "AI Doubt Solver",      desc: "Instant answers scoped strictly to your NCERT syllabus" },
+  { icon: "📊", title: "Progress Tracking",    desc: "Track completion across every chapter and worksheet" },
 ];
 
 const classData = [
@@ -64,7 +64,7 @@ export default function LandingPage() {
             </h1>
             <p className="text-slate-400 text-base md:text-lg mb-8 leading-relaxed max-w-lg">
               India&apos;s most focused study app for Class 6–8 Maths &amp; Science.
-              Videos, notes, worksheets and AI tutoring — everything aligned to NCERT 2026.
+              Notes, worksheets and AI tutoring — everything aligned to NCERT 2026.
             </p>
             <div className="flex flex-wrap gap-3 mb-8">
               <Link href="/login"
@@ -79,7 +79,7 @@ export default function LandingPage() {
               </Link>
             </div>
             <div className="flex flex-wrap gap-2">
-              {["📹 Video Lessons","📝 Notes","🧪 Worksheets","🤖 AI Tutor","📊 Progress"].map(f => (
+              {["📝 Notes","🧪 Worksheets","🤖 AI Tutor","📊 Progress"].map(f => (
                 <span key={f} className="glass px-3 py-1 rounded-full text-xs text-slate-400">{f}</span>
               ))}
             </div>
@@ -200,7 +200,7 @@ export default function LandingPage() {
               <div className="text-lg font-bold text-slate-300 mb-1">Free</div>
               <div className="text-5xl font-black gradient-text mb-6">₹0</div>
               <div className="space-y-2.5 text-sm text-slate-400 mb-8">
-                {["Browse all 78 chapters","Watch video lessons","Read chapter notes","Try 2 worksheets per chapter"].map(f => (
+                {["Browse all 78 chapters","Read chapter notes","Try 2 worksheets per chapter","AI doubt solver"].map(f => (
                   <div key={f} className="flex items-center gap-2"><span className="text-green-400 text-xs">✓</span>{f}</div>
                 ))}
               </div>
