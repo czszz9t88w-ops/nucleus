@@ -3,10 +3,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const items = [
-  { href: "/home",     icon: "🏠", label: "Home",     exact: true },
-  { href: "/home",     icon: "📖", label: "Learn",    exact: false },
-  { href: "/progress", icon: "📊", label: "Progress", exact: false },
-  { href: "/setup",    icon: "👤", label: "Profile",  exact: false },
+  { href: "/home",     icon: "🏠", label: "Home",     match: (p: string) => p === "/home" },
+  { href: "/class/6",  icon: "📚", label: "Chapters",  match: (p: string) => p.startsWith("/class") || p.startsWith("/subject") || p.startsWith("/chapter") },
+  { href: "/progress", icon: "📊", label: "Progress",  match: (p: string) => p.startsWith("/progress") },
+  { href: "/setup",    icon: "👤", label: "Profile",   match: (p: string) => p.startsWith("/setup") },
 ];
 
 export default function BottomNav() {
@@ -15,23 +15,32 @@ export default function BottomNav() {
     <nav
       className="md:hidden fixed bottom-0 left-0 right-0 z-50 safe-bottom"
       style={{
-        background: "rgba(10,11,26,0.92)",
-        borderTop: "1px solid rgba(255,255,255,0.08)",
-        backdropFilter: "blur(16px)",
+        background: "rgba(8,9,22,0.96)",
+        borderTop: "1px solid rgba(255,255,255,0.07)",
+        backdropFilter: "blur(20px)",
       }}
     >
-      <div className="flex justify-around px-2 py-2">
+      <div className="flex justify-around px-1 pt-2 pb-1">
         {items.map((item) => {
-          const active = item.exact ? pathname === item.href : (item.href !== "/home" && pathname.startsWith(item.href)) || (item.label === "Learn" && (pathname.startsWith("/class") || pathname.startsWith("/subject") || pathname.startsWith("/chapter")));
+          const active = item.match(pathname);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl transition-all"
-              style={{ color: active ? "#A855F7" : "#64748B" }}
+              className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all min-w-[56px]"
             >
-              <span className="text-xl">{item.icon}</span>
-              <span className="text-xs font-medium">{item.label}</span>
+              <span className="text-xl leading-none"
+                style={{ filter: active ? "drop-shadow(0 0 6px rgba(168,85,247,0.8))" : "none" }}>
+                {item.icon}
+              </span>
+              <span className="text-[10px] font-semibold tracking-wide"
+                style={{ color: active ? "#A855F7" : "#475569" }}>
+                {item.label}
+              </span>
+              {active && (
+                <div className="w-4 h-0.5 rounded-full mt-0.5"
+                  style={{ background: "linear-gradient(90deg,#7C3AED,#06B6D4)" }} />
+              )}
             </Link>
           );
         })}
