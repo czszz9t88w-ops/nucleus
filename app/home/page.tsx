@@ -16,7 +16,7 @@ const classes = [
 
 const tips = [
   "Attempt the MCQ worksheet first — it shows you gaps before you study.",
-  "Flashcard snippets are perfect for 5-minute revision before class.",
+  "After each worksheet, review wrong answers — understanding mistakes is the fastest way to improve.",
   "Read the Q&A model answers carefully — examiners look for exact keywords.",
   "A 25-minute focused session beats 2 hours of distracted study.",
   "Complete both worksheets per chapter for maximum exam confidence.",
