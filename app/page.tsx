@@ -99,31 +99,10 @@ export default function LandingPage() {
               <Link href="/login"
                 className="px-7 py-3.5 rounded-2xl text-base font-bold glass transition-all active:scale-95"
                 style={{ color: "#A855F7" }}>
-                Try Demo
+                Start Learning with Premium →
               </Link>
             </div>
-            <p className="text-xs text-slate-600 mt-4 mb-10">No credit card · No login required for demo</p>
-
-            {/* Browse by class / subject */}
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-2 text-left">
-              {[
-                { href: "/subject/6/maths",   icon: "🔢", cls: "Class 6", sub: "Maths",   color: "#7C3AED" },
-                { href: "/subject/6/science",  icon: "🔬", cls: "Class 6", sub: "Science", color: "#06B6D4" },
-                { href: "/subject/7/maths",   icon: "🔢", cls: "Class 7", sub: "Maths",   color: "#7C3AED" },
-                { href: "/subject/7/science",  icon: "🔬", cls: "Class 7", sub: "Science", color: "#06B6D4" },
-                { href: "/subject/8/maths",   icon: "🔢", cls: "Class 8", sub: "Maths",   color: "#7C3AED" },
-                { href: "/subject/8/science",  icon: "🔬", cls: "Class 8", sub: "Science", color: "#06B6D4" },
-              ].map(item => (
-                <Link key={item.href} href={item.href}
-                  className="glass-card rounded-xl p-3 flex flex-col items-center gap-1.5 group transition-all active:scale-95">
-                  <span className="text-xl">{item.icon}</span>
-                  <div className="text-center">
-                    <div className="text-[10px] font-bold text-slate-500">{item.cls}</div>
-                    <div className="text-[11px] font-black text-slate-300 group-hover:text-white transition-colors">{item.sub}</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <p className="text-xs text-slate-600 mt-4">No credit card · Cancel anytime</p>
           </div>
         </div>
       </section>
@@ -278,7 +257,7 @@ export default function LandingPage() {
             <Link href="/login"
               className="px-8 py-4 rounded-2xl text-base font-bold glass transition-all"
               style={{ color: "#A855F7" }}>
-              Try Demo First
+              Start Learning with Premium →
             </Link>
           </div>
         </div>

@@ -214,7 +214,7 @@ export default function LoginPage() {
               }}
               className="w-full py-3 rounded-xl text-sm font-semibold transition-all active:scale-[0.97]"
               style={{ background:"rgba(255,255,255,0.04)", color:"#64748B", border:"1px solid rgba(255,255,255,0.08)" }}>
-              Try Demo — no login needed →
+              Start Learning with Premium →
             </button>
 
             <p className="text-center text-slate-700 text-xs mt-5">
