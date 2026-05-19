@@ -121,8 +121,17 @@ const content: Record<string, ChapterContent> = {
   },
 };
 
+import { class6Content } from "./class6Content";
+import { class7Content } from "./class7content";
+
+const allContent: Record<string, ChapterContent> = {
+  ...content,
+  ...class6Content,
+  ...class7Content,
+};
+
 export function getChapterContent(id: string): ChapterContent | null {
-  return content[id] ?? null;
+  return allContent[id] ?? null;
 }
 
 // Fallback content for chapters without full content

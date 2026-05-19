@@ -1,6 +1,5 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getMessaging, isSupported } from "firebase/messaging";
+import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,14 +10,31 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-export const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
+export const isFirebaseConfigured =
+  typeof window !== "undefined" && Object.values(firebaseConfig).every(Boolean);
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-export const auth = getAuth(app);
+let _app: FirebaseApp | null = null;
+let _auth: Auth | null = null;
+
+function getFirebaseApp(): FirebaseApp | null {
+  if (!isFirebaseConfigured) return null;
+  if (!_app) {
+    _app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  }
+  return _app;
+}
+
+export function getFirebaseAuth(): Auth | null {
+  const app = getFirebaseApp();
+  if (!app) return null;
+  if (!_auth) _auth = getAuth(app);
+  return _auth;
+}
 
 export async function getFirebaseMessaging() {
-  if (await isSupported()) {
-    return getMessaging(app);
-  }
+  const app = getFirebaseApp();
+  if (!app) return null;
+  const { getMessaging, isSupported } = await import("firebase/messaging");
+  if (await isSupported()) return getMessaging(app);
   return null;
 }

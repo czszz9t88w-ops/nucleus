@@ -8,8 +8,10 @@ type Tab = "email" | "google";
 
 async function firebaseEmailAuth(email: string, password: string): Promise<{ ok: boolean; error?: string }> {
   try {
-    const { auth, isFirebaseConfigured } = await import("@/lib/firebase");
+    const { getFirebaseAuth, isFirebaseConfigured } = await import("@/lib/firebase");
     if (!isFirebaseConfigured) return { ok: false, error: "firebase_not_configured" };
+    const auth = getFirebaseAuth();
+    if (!auth) return { ok: false, error: "firebase_not_configured" };
     const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = await import("firebase/auth");
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -33,8 +35,10 @@ async function firebaseEmailAuth(email: string, password: string): Promise<{ ok:
 
 async function firebaseGoogleAuth(): Promise<{ ok: boolean; name?: string; error?: string }> {
   try {
-    const { auth, isFirebaseConfigured } = await import("@/lib/firebase");
+    const { getFirebaseAuth, isFirebaseConfigured } = await import("@/lib/firebase");
     if (!isFirebaseConfigured) return { ok: false, error: "firebase_not_configured" };
+    const auth = getFirebaseAuth();
+    if (!auth) return { ok: false, error: "firebase_not_configured" };
     const { GoogleAuthProvider, signInWithPopup } = await import("firebase/auth");
     const result = await signInWithPopup(auth, new GoogleAuthProvider());
     return { ok: true, name: result.user.displayName ?? "" };
