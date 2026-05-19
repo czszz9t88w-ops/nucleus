@@ -123,11 +123,13 @@ const content: Record<string, ChapterContent> = {
 
 import { class6Content } from "./class6Content";
 import { class7Content } from "./class7content";
+import { generatedContent } from "./generatedContent";
 
 const allContent: Record<string, ChapterContent> = {
   ...content,
   ...class6Content,
   ...class7Content,
+  ...generatedContent, // sheet data wins — always highest priority
 };
 
 export function getChapterContent(id: string): ChapterContent | null {
