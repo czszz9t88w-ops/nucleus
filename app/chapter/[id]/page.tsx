@@ -4,6 +4,7 @@ import Stars from "@/components/Stars";
 import BottomNav from "@/components/BottomNav";
 import Chatbot from "@/components/Chatbot";
 import Sidebar from "@/components/Sidebar";
+import ChapterTracker from "@/components/ChapterTracker";
 import chapters, { getChapterById } from "@/data/curriculum";
 
 export function generateStaticParams() {
@@ -117,6 +118,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
+      <ChapterTracker chapterId={id} />
       <Chatbot chapterId={id} />
       <BottomNav />
     </div>

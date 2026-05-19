@@ -66,7 +66,7 @@ export default function LoginPage() {
           </Link>
 
           <div>
-            <div className="float inline-block text-7xl mb-8">⚛️</div>
+            <div className="text-7xl mb-8">⚛️</div>
             <h1 className="text-4xl font-black text-white leading-tight mb-4">
               Welcome back to<br />
               <span className="gradient-text">your universe.</span>
@@ -76,7 +76,7 @@ export default function LoginPage() {
               Class 6–8 · Maths &amp; Science.
             </p>
             <div className="space-y-3">
-              {["📹 Video lessons for every chapter","📝 Summarised notes & flashcards","✅ MCQ + Q&A worksheets","🤖 AI doubt solver"].map(f => (
+              {["📝 Summarised notes & flashcards","💡 Snippets & term definitions","✅ MCQ + Q&A worksheets","🤖 AI doubt solver"].map(f => (
                 <div key={f} className="flex items-center gap-3 text-sm text-slate-400">
                   <span className="text-purple-400">✓</span>{f}
                 </div>

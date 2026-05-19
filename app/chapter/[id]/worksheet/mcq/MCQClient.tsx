@@ -9,6 +9,7 @@ import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import { getChapterById } from "@/data/curriculum";
 import { getChapterContent, getDefaultContent } from "@/data/content";
+import { markWorksheetDone } from "@/lib/progress";
 
 export default function MCQClient() {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +33,8 @@ export default function MCQClient() {
   function submit() {
     if (Object.keys(answers).length < questions.length) return;
     setSubmitted(true);
+    const correct = questions.filter((q, i) => answers[i] === q.answer).length;
+    markWorksheetDone(id, "mcq", sheet, correct);
   }
 
   function reset() { setAnswers({}); setSubmitted(false); }

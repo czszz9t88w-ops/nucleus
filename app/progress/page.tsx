@@ -5,34 +5,46 @@ import Stars from "@/components/Stars";
 import BottomNav from "@/components/BottomNav";
 import Sidebar from "@/components/Sidebar";
 import chapters from "@/data/curriculum";
+import { getProgress, ProgressData } from "@/lib/progress";
+
+const maths6 = chapters.filter(c => c.classNum === 6 && c.subject === "maths");
+const sci6   = chapters.filter(c => c.classNum === 6 && c.subject === "science");
+const maths7 = chapters.filter(c => c.classNum === 7 && c.subject === "maths");
+const sci7   = chapters.filter(c => c.classNum === 7 && c.subject === "science");
+const maths8 = chapters.filter(c => c.classNum === 8 && c.subject === "maths");
+const sci8   = chapters.filter(c => c.classNum === 8 && c.subject === "science");
+
+const SUBJECTS = [
+  { label: "Class 6 · Mathematics", chapters: maths6, color: "#7C3AED" },
+  { label: "Class 6 · Science",     chapters: sci6,   color: "#06B6D4" },
+  { label: "Class 7 · Mathematics", chapters: maths7, color: "#7C3AED" },
+  { label: "Class 7 · Science",     chapters: sci7,   color: "#06B6D4" },
+  { label: "Class 8 · Mathematics", chapters: maths8, color: "#7C3AED" },
+  { label: "Class 8 · Science",     chapters: sci8,   color: "#06B6D4" },
+];
+
+const TOTAL = chapters.length;
 
 export default function ProgressPage() {
   const [profile, setProfile] = useState<{ name?: string; class?: number }>({});
+  const [progress, setProgress] = useState<ProgressData | null>(null);
 
   useEffect(() => {
     try {
       const p = localStorage.getItem("nucleus_profile");
       if (p) setProfile(JSON.parse(p));
     } catch {}
+    setProgress(getProgress());
   }, []);
 
-  const maths6 = chapters.filter(c => c.classNum === 6 && c.subject === "maths");
-  const sci6   = chapters.filter(c => c.classNum === 6 && c.subject === "science");
-  const maths7 = chapters.filter(c => c.classNum === 7 && c.subject === "maths");
-  const sci7   = chapters.filter(c => c.classNum === 7 && c.subject === "science");
+  const visited = progress?.chaptersVisited ?? [];
+  const worksheets = progress?.worksheetsDone ?? [];
 
   const stats = [
-    { label: "Chapters Visited",   val: "0 / 78",  icon: "📖" },
-    { label: "Worksheets Done",    val: "0",        icon: "✅" },
-    { label: "Questions Answered", val: "0",        icon: "🎯" },
-    { label: "Study Streak",       val: "0 days",   icon: "🔥" },
-  ];
-
-  const subjects = [
-    { label: "Class 6 · Mathematics", chapters: maths6, color: "#7C3AED" },
-    { label: "Class 6 · Science",     chapters: sci6,   color: "#06B6D4" },
-    { label: "Class 7 · Mathematics", chapters: maths7, color: "#7C3AED" },
-    { label: "Class 7 · Science",     chapters: sci7,   color: "#06B6D4" },
+    { label: "Chapters Visited",    val: `${visited.length} / ${TOTAL}`, icon: "📖" },
+    { label: "Worksheets Done",     val: String(worksheets.length),       icon: "✅" },
+    { label: "Questions Answered",  val: String(progress?.questionsAnswered ?? 0), icon: "🎯" },
+    { label: "Study Streak",        val: `${progress?.streak ?? 0} days`, icon: "🔥" },
   ];
 
   return (
@@ -77,41 +89,53 @@ export default function ProgressPage() {
 
           {/* Subject breakdown — 2-col on desktop */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {subjects.map((sub) => (
-              <div key={sub.label} className="glass rounded-2xl p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-sm font-bold text-white">{sub.label}</h2>
-                  <span className="text-xs text-slate-500">0 / {sub.chapters.length}</span>
+            {SUBJECTS.map((sub) => {
+              const done = sub.chapters.filter(ch => visited.includes(ch.id)).length;
+              const pct = sub.chapters.length ? Math.round((done / sub.chapters.length) * 100) : 0;
+              return (
+                <div key={sub.label} className="glass rounded-2xl p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-sm font-bold text-white">{sub.label}</h2>
+                    <span className="text-xs text-slate-500">{done} / {sub.chapters.length}</span>
+                  </div>
+                  <div className="h-2 bg-slate-800 rounded-full mb-4">
+                    <div className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${pct}%`, background: `linear-gradient(90deg,${sub.color},${sub.color}88)` }} />
+                  </div>
+                  <div className="grid grid-cols-6 gap-1.5">
+                    {sub.chapters.map((ch) => {
+                      const isVisited = visited.includes(ch.id);
+                      return (
+                        <Link key={ch.id} href={`/chapter/${ch.id}`}
+                          className="aspect-square rounded-lg flex items-center justify-center text-xs font-bold transition-all active:scale-90 hover:opacity-80"
+                          style={isVisited
+                            ? { background: `${sub.color}33`, color: sub.color, border: `1px solid ${sub.color}66` }
+                            : { background: "rgba(255,255,255,0.05)", color: "#64748B", border: "1px solid rgba(255,255,255,0.06)" }}
+                          title={ch.title}>
+                          {ch.num}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="h-2 bg-slate-800 rounded-full mb-4">
-                  <div className="h-full w-0 rounded-full" style={{ background: `linear-gradient(90deg,${sub.color},${sub.color}88)` }} />
-                </div>
-                <div className="grid grid-cols-6 gap-1.5">
-                  {sub.chapters.map((ch) => (
-                    <Link key={ch.id} href={`/chapter/${ch.id}`}
-                      className="aspect-square rounded-lg flex items-center justify-center text-xs font-bold transition-transform active:scale-90 hover:opacity-80"
-                      style={{ background: "rgba(255,255,255,0.05)", color: "#64748B", border: "1px solid rgba(255,255,255,0.06)" }}
-                      title={ch.title}>
-                      {ch.num}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* CTA card */}
-          <div className="glass rounded-2xl p-6 flex items-start gap-4 md:max-w-2xl">
-            <span className="text-3xl flex-shrink-0">🚀</span>
-            <div>
-              <div className="font-bold text-white text-base">Start your first chapter!</div>
-              <p className="text-sm text-slate-400 mt-1 leading-relaxed">Progress tracking activates once you attempt a worksheet. Go to any chapter and complete a worksheet to see your score here.</p>
-              <Link href="/home" className="inline-block mt-4 px-5 py-2 rounded-xl text-sm text-white font-semibold transition-opacity hover:opacity-90"
-                style={{ background: "linear-gradient(135deg,#7C3AED,#06B6D4)" }}>
-                Browse Chapters →
-              </Link>
+          {visited.length === 0 && (
+            <div className="glass rounded-2xl p-6 flex items-start gap-4 md:max-w-2xl">
+              <span className="text-3xl flex-shrink-0">🚀</span>
+              <div>
+                <div className="font-bold text-white text-base">Start your first chapter!</div>
+                <p className="text-sm text-slate-400 mt-1 leading-relaxed">Visit any chapter to begin tracking your progress. Complete worksheets to see your scores here.</p>
+                <Link href="/home" className="inline-block mt-4 px-5 py-2 rounded-xl text-sm text-white font-semibold transition-opacity hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg,#7C3AED,#06B6D4)" }}>
+                  Browse Chapters →
+                </Link>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 

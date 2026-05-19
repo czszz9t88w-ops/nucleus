@@ -9,6 +9,7 @@ import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import { getChapterById } from "@/data/curriculum";
 import { getChapterContent, getDefaultContent } from "@/data/content";
+import { markWorksheetDone } from "@/lib/progress";
 
 export default function QAClient() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +30,7 @@ export default function QAClient() {
 
   function showAll() {
     setRevealed(new Set(questions.map((_, i) => i)));
+    markWorksheetDone(id, "qa", sheet, questions.length);
   }
 
   return (

@@ -5,6 +5,7 @@ import Stars from "@/components/Stars";
 import BottomNav from "@/components/BottomNav";
 import Sidebar from "@/components/Sidebar";
 import Chatbot from "@/components/Chatbot";
+import { getProgress, ProgressData } from "@/lib/progress";
 
 const planets = [
   { num: 6, color: "#7C3AED", icon: "🪐", label: "Class VI",   sub: "10 Maths · 10 Science", book: "Ganita Prakash · Curiosity" },
@@ -12,22 +13,24 @@ const planets = [
   { num: 8, color: "#F59E0B", icon: "🌟", label: "Class VIII", sub: "16 Maths · 16 Science", book: "Ganita Prakash · Curiosity" },
 ];
 
-const stats = [
-  { label: "Chapters Done",     val: "0",      icon: "✅" },
-  { label: "Study Streak",      val: "0 days", icon: "🔥" },
-  { label: "Worksheets",        val: "0",      icon: "📝" },
-  { label: "Questions Answered",val: "0",      icon: "🎯" },
-];
-
 export default function HomePage() {
   const [profile, setProfile] = useState<{ name?: string; class?: number }>({});
+  const [progress, setProgress] = useState<ProgressData | null>(null);
 
   useEffect(() => {
     try {
       const p = localStorage.getItem("nucleus_profile");
       if (p) setProfile(JSON.parse(p));
     } catch {}
+    setProgress(getProgress());
   }, []);
+
+  const stats = [
+    { label: "Chapters Done",      val: String(progress?.chaptersVisited.length ?? 0), icon: "✅" },
+    { label: "Study Streak",       val: `${progress?.streak ?? 0} days`,               icon: "🔥" },
+    { label: "Worksheets",         val: String(progress?.worksheetsDone.length ?? 0),   icon: "📝" },
+    { label: "Questions Answered", val: String(progress?.questionsAnswered ?? 0),        icon: "🎯" },
+  ];
 
   return (
     <div className="relative min-h-screen pb-24 md:pb-10 overflow-hidden"

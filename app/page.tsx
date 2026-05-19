@@ -92,7 +92,7 @@ export default function LandingPage() {
                 style={{ background: "radial-gradient(circle,#7C3AED,transparent)" }} />
               <div className="relative glass rounded-3xl p-7 w-80">
                 <div className="text-center mb-5">
-                  <div className="float inline-block text-5xl mb-3">⚛️</div>
+                  <div className="text-5xl mb-3">⚛️</div>
                   <div className="text-xl font-black gradient-text">Nucleus</div>
                   <div className="text-xs text-slate-500 mt-0.5">Your Universe of Knowledge</div>
                 </div>

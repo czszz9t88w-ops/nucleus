@@ -88,7 +88,7 @@ export default function OnboardingPage() {
             हमने आपका स्तर तय कर लिया है। पढ़ाई शुरू करते हैं!
           </p>
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/home")}
             className="w-full py-4 rounded-2xl font-semibold text-lg text-white transition-transform active:scale-95"
             style={{ background: "#1A5F8A" }}
           >
