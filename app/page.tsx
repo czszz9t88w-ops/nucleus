@@ -10,11 +10,6 @@ const features = [
   { icon: "📊", title: "Progress Tracker",  desc: "Visual chapter-by-chapter completion map, study streaks and performance stats — see your growth.", color: "#8B5CF6" },
 ];
 
-const classData = [
-  { num: 6, icon: "🪐", color: "#7C3AED", maths: 10, sci: 10, level: "Foundation", desc: "Build strong fundamentals in numbers, algebra and life sciences." },
-  { num: 7, icon: "🌍", color: "#06B6D4", maths: 13, sci: 13, level: "Building Up", desc: "Deepen concepts in geometry, data handling, physics and chemistry." },
-  { num: 8, icon: "🌟", color: "#F59E0B", maths: 16, sci: 16, level: "Board Ready", desc: "Master advanced topics, be fully ready for Class 9 and competitive prep." },
-];
 
 const testimonials = [
   { name: "Priya Sharma", cls: "Class 7 · Delhi", text: "I scored 95/100 in Science after using Nucleus for 2 weeks. The snippet cards made revision so much faster than reading the textbook again.", avatar: "🧑‍🎓", score: "95/100" },
@@ -50,7 +45,7 @@ export default function LandingPage() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-7">
-          {[["#features","Features"],["#how","How it works"],["#subjects","Classes"],["#social","Reviews"]].map(([href, label]) => (
+          {[["#features","Features"],["#how","How it works"],["#social","Reviews"],["#pricing","Pricing"]].map(([href, label]) => (
             <a key={href} href={href} className="text-sm text-slate-500 hover:text-white transition-colors">{label}</a>
           ))}
         </nav>
@@ -70,100 +65,64 @@ export default function LandingPage() {
       <section className="relative z-10 px-6 md:px-16 pt-16 pb-20 md:pt-24 md:pb-32">
         <div className="max-w-6xl mx-auto">
 
-          {/* Hero content */}
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="slide-up">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-7"
-                style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7" }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse inline-block" />
-                Class 6–8 · Maths &amp; Science · CBSE
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-5 tracking-tight">
-                Study Smarter.<br />
-                <span className="gradient-text">Score Higher.</span>
-              </h1>
-              <p className="text-slate-400 text-base md:text-lg mb-8 leading-relaxed max-w-md">
-                India&apos;s most focused study app for Class 6–8. Notes, worksheets and AI tutoring —
-                100% aligned to <strong className="text-slate-300">NCERT 2026</strong>.
-              </p>
+          {/* Hero — full width centred */}
+          <div className="max-w-3xl mx-auto text-center slide-up">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-7"
+              style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse inline-block" />
+              Class 6–8 · Maths &amp; Science · CBSE
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-5 tracking-tight">
+              Study Smarter.<br />
+              <span className="gradient-text">Score Higher.</span>
+            </h1>
+            <p className="text-slate-400 text-base md:text-lg mb-8 leading-relaxed mx-auto max-w-xl">
+              India&apos;s most focused study app for Class 6–8. Notes, worksheets and AI tutoring —
+              100% aligned to <strong className="text-slate-300">NCERT 2026</strong>.
+            </p>
 
-              {/* Mini stats */}
-              <div className="flex flex-wrap gap-4 mb-8">
-                {[["78", "Chapters"], ["780+", "Worksheets"], ["100%", "NCERT 2026"]].map(([val, label]) => (
-                  <div key={label} className="text-center">
-                    <div className="text-xl font-black gradient-text">{val}</div>
-                    <div className="text-[11px] text-slate-600">{label}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-wrap gap-3 mb-6">
-                <Link href="/login"
-                  className="btn-primary px-7 py-3.5 rounded-2xl text-base">
-                  Start Learning Free →
-                </Link>
-                <Link href="/login"
-                  className="px-7 py-3.5 rounded-2xl text-base font-bold glass transition-all active:scale-95"
-                  style={{ color: "#A855F7" }}>
-                  Try Demo
-                </Link>
-              </div>
-              <p className="text-xs text-slate-600">No credit card · No login required for demo</p>
+            {/* Mini stats */}
+            <div className="flex flex-wrap justify-center gap-8 mb-10">
+              {[["78", "Chapters"], ["780+", "Worksheets"], ["100%", "NCERT 2026"]].map(([val, label]) => (
+                <div key={label} className="text-center">
+                  <div className="text-2xl font-black gradient-text">{val}</div>
+                  <div className="text-xs text-slate-600 mt-0.5">{label}</div>
+                </div>
+              ))}
             </div>
 
-            {/* App preview card */}
-            <div className="hidden md:flex justify-center items-center">
-              <div className="relative">
-                <div className="absolute -inset-10 blur-3xl opacity-15 rounded-full"
-                  style={{ background: "radial-gradient(circle,#7C3AED,transparent)" }} />
-                <div className="relative glass-card p-6 w-80 shadow-2xl">
-                  <div className="flex items-center justify-between mb-5">
-                    <div>
-                      <div className="text-xs text-slate-500">Welcome back,</div>
-                      <div className="font-black text-white">Priya 👋</div>
-                    </div>
-                    <div className="glass px-2.5 py-1 rounded-full text-xs font-bold text-amber-400">🔥 7-day streak</div>
-                  </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/login"
+                className="btn-primary px-7 py-3.5 rounded-2xl text-base">
+                Start Learning Free →
+              </Link>
+              <Link href="/login"
+                className="px-7 py-3.5 rounded-2xl text-base font-bold glass transition-all active:scale-95"
+                style={{ color: "#A855F7" }}>
+                Try Demo
+              </Link>
+            </div>
+            <p className="text-xs text-slate-600 mt-4 mb-10">No credit card · No login required for demo</p>
 
-                  {/* Continue card */}
-                  <div className="glass rounded-xl p-3 mb-4"
-                    style={{ borderColor: "rgba(124,58,237,0.3)" }}>
-                    <div className="text-[10px] text-slate-500 mb-1.5">Continue Learning</div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">🔢</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-white truncate">Patterns in Maths</div>
-                        <div className="h-1 bg-slate-800 rounded-full mt-1.5">
-                          <div className="h-full w-3/4 rounded-full" style={{ background: "linear-gradient(90deg,#7C3AED,#06B6D4)" }} />
-                        </div>
-                      </div>
-                      <span className="text-xs font-bold text-purple-400 flex-shrink-0">75%</span>
-                    </div>
+            {/* Browse by class / subject */}
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2 text-left">
+              {[
+                { href: "/subject/6/maths",   icon: "🔢", cls: "Class 6", sub: "Maths",   color: "#7C3AED" },
+                { href: "/subject/6/science",  icon: "🔬", cls: "Class 6", sub: "Science", color: "#06B6D4" },
+                { href: "/subject/7/maths",   icon: "🔢", cls: "Class 7", sub: "Maths",   color: "#7C3AED" },
+                { href: "/subject/7/science",  icon: "🔬", cls: "Class 7", sub: "Science", color: "#06B6D4" },
+                { href: "/subject/8/maths",   icon: "🔢", cls: "Class 8", sub: "Maths",   color: "#7C3AED" },
+                { href: "/subject/8/science",  icon: "🔬", cls: "Class 8", sub: "Science", color: "#06B6D4" },
+              ].map(item => (
+                <Link key={item.href} href={item.href}
+                  className="glass-card rounded-xl p-3 flex flex-col items-center gap-1.5 group transition-all active:scale-95">
+                  <span className="text-xl">{item.icon}</span>
+                  <div className="text-center">
+                    <div className="text-[10px] font-bold text-slate-500">{item.cls}</div>
+                    <div className="text-[11px] font-black text-slate-300 group-hover:text-white transition-colors">{item.sub}</div>
                   </div>
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-4 gap-2 mb-4">
-                    {[["📖","14","Chapters"],["🔥","7","Streak"],["✅","11","Sheets"],["🎯","63","Solved"]].map(([icon,val,lbl]) => (
-                      <div key={lbl} className="glass rounded-xl p-2 text-center">
-                        <div className="text-base">{icon}</div>
-                        <div className="text-sm font-black text-white">{val}</div>
-                        <div className="text-[9px] text-slate-600">{lbl}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Subject cards */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {[["🪐","Class 6","#7C3AED"],["🌍","Class 7","#06B6D4"],["🌟","Class 8","#F59E0B"]].map(([icon,label,color]) => (
-                      <div key={label} className="glass rounded-xl p-2 text-center"
-                        style={{ borderColor: `${color}33` }}>
-                        <div className="text-lg">{icon}</div>
-                        <div className="text-[9px] font-bold text-slate-400">{label}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -208,52 +167,6 @@ export default function LandingPage() {
                 <h3 className="font-bold text-white text-sm mb-2">{f.title}</h3>
                 <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Subjects / Classes ───────────────────────────────── */}
-      <section id="subjects" className="relative z-10 px-6 md:px-16 py-14 md:py-20"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-black text-white mb-3">All classes. All chapters.</h2>
-            <p className="text-slate-500 text-sm">78 chapters · 2 subjects · Classes 6, 7 &amp; 8</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {classData.map(c => (
-              <Link key={c.num} href={`/class/${c.num}`}
-                className="glass-card p-6 block group">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl"
-                    style={{ background: `${c.color}18`, border: `1px solid ${c.color}33` }}>
-                    {c.icon}
-                  </div>
-                  <div>
-                    <div className="text-xl font-black text-white">Class {c.num}</div>
-                    <div className="text-xs font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
-                      style={{ background: `${c.color}22`, color: c.color }}>{c.level}</div>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-500 leading-relaxed mb-5">{c.desc}</p>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2.5 text-xs">
-                    <span className="w-7 h-7 rounded-lg flex items-center justify-center text-base"
-                      style={{ background: "rgba(124,58,237,0.15)" }}>🔢</span>
-                    <span className="text-slate-400 font-medium">Mathematics</span>
-                    <span className="ml-auto text-slate-600">{c.maths} chapters</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-xs">
-                    <span className="w-7 h-7 rounded-lg flex items-center justify-center text-base"
-                      style={{ background: "rgba(6,182,212,0.15)" }}>🔬</span>
-                    <span className="text-slate-400 font-medium">Science</span>
-                    <span className="ml-auto text-slate-600">{c.sci} chapters</span>
-                  </div>
-                </div>
-                <div className="mt-4 text-xs font-bold group-hover:translate-x-1 transition-transform"
-                  style={{ color: c.color }}>Explore Class {c.num} →</div>
-              </Link>
             ))}
           </div>
         </div>
