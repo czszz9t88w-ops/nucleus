@@ -11,7 +11,7 @@ jobs:
   deploy-vercel:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
-    if: vars.DEPLOY_TARGET == 'vercel' || vars.DEPLOY_TARGET == ''
+    if: vars.DEPLOY_TARGET == 'vercel'
     steps:
       - uses: actions/checkout@v4
 
