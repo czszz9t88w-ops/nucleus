@@ -24,11 +24,9 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
   const color = subColor[chapter.subject];
 
   const menuItems = [
-    { key: "notes",    icon: "📝", label: "Chapter Notes",             sub: "Key concepts · definitions · summaries",  href: `/chapter/${id}/notes` },
-    { key: "snippets", icon: "💡", label: "Snippets",                  sub: "Tap-to-flip term & formula cards",          href: `/chapter/${id}/snippets` },
-    { key: "mcq",      icon: "✅", label: "MCQ + Assertion Worksheet", sub: "2 worksheets · 10 questions each",          href: `/chapter/${id}/worksheet/mcq`,
+    { key: "mcq",      icon: "✅", label: "MCQ + Assertion Worksheet", sub: "2 worksheets · 10 questions each",        href: `/chapter/${id}/worksheet/mcq`,
       wsKeys: [`${id}-mcq-0`, `${id}-mcq-1`] },
-    { key: "qa",       icon: "✍️", label: "Q&A Worksheet",             sub: "2 worksheets · model answers included",    href: `/chapter/${id}/worksheet/qa`,
+    { key: "qa",       icon: "✍️", label: "Q&A Worksheet",             sub: "2 worksheets · model answers included",   href: `/chapter/${id}/worksheet/qa`,
       wsKeys: [`${id}-qa-0`, `${id}-qa-1`] },
   ];
 
@@ -114,7 +112,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
               <div className="mt-4 glass-card rounded-xl p-4 flex items-start gap-3">
                 <span className="text-lg flex-shrink-0">🎯</span>
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  <strong className="text-slate-400">Recommended order:</strong> Read Notes → Flip Snippets → Attempt MCQ → Practice Q&amp;A
+                  <strong className="text-slate-400">Tip:</strong> Attempt MCQ first to find gaps, then use Q&amp;A to practise detailed answers.
                 </p>
               </div>
             </div>
