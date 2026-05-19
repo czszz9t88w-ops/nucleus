@@ -5,6 +5,7 @@ import BottomNav from "@/components/BottomNav";
 import Chatbot from "@/components/Chatbot";
 import Sidebar from "@/components/Sidebar";
 import ChapterTracker from "@/components/ChapterTracker";
+import ChapterProgress from "@/components/ChapterProgress";
 import chapters, { getChapterById } from "@/data/curriculum";
 
 export function generateStaticParams() {
@@ -77,12 +78,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
                   <span className="glass text-xs px-2 py-0.5 rounded-full text-slate-400 capitalize">{chapter.subject}</span>
                 </div>
                 <div className="border-t pt-4 mt-2" style={{ borderColor:"rgba(255,255,255,0.08)" }}>
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
-                    <span>Chapter progress</span><span>0%</span>
-                  </div>
-                  <div className="h-1.5 bg-slate-800 rounded-full">
-                    <div className="h-full w-0 rounded-full" style={{ background:`linear-gradient(90deg,${color},${color}88)` }} />
-                  </div>
+                  <ChapterProgress chapterId={id} color={color} />
                 </div>
               </div>
             </div>
@@ -90,12 +86,8 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
             {/* Right: menu */}
             <div className="md:col-span-2">
               {/* Mobile progress bar */}
-              <div className="md:hidden glass rounded-xl p-3 flex items-center gap-3 mb-5">
-                <span className="text-xs text-slate-500">Chapter progress</span>
-                <div className="flex-1 h-1.5 bg-slate-800 rounded-full">
-                  <div className="h-full w-0 rounded-full" style={{ background:`linear-gradient(90deg,${color},${color}88)` }} />
-                </div>
-                <span className="text-xs font-semibold text-slate-400">0%</span>
+              <div className="md:hidden glass rounded-xl p-3 mb-5">
+                <ChapterProgress chapterId={id} color={color} />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
