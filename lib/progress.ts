@@ -58,8 +58,8 @@ export function markWorksheetDone(
   const alreadyDone = data.worksheetsDone.includes(key);
   if (!alreadyDone) {
     data.worksheetsDone.push(key);
+    data.questionsAnswered += questionsCount;
     touchStreak(data);
   }
-  data.questionsAnswered += questionsCount;
   saveProgress(data);
 }

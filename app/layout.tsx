@@ -6,7 +6,7 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Nucleus — Learn Smarter",
-  description: "NCERT 2026 Class 6-8 Maths & Science · Video lessons, notes, worksheets, AI tutor",
+  description: "NCERT 2026 Class 6-8 Maths & Science · Worksheets, MCQs, Q&A and AI tutor for CBSE students",
   manifest: "/manifest.json",
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Nucleus" },
 };

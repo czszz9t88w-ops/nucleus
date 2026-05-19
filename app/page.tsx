@@ -2,24 +2,24 @@ import Link from "next/link";
 import Stars from "@/components/Stars";
 
 const features = [
-  { icon: "📝", title: "Chapter Notes",     desc: "3–4 pages of crisp summaries, key highlights and important diagrams — every chapter, all 78.", color: "#7C3AED" },
-  { icon: "💡", title: "Smart Snippets",    desc: "Tap-to-flip flashcards for every term, formula and definition. Designed for 5-minute revision.", color: "#06B6D4" },
-  { icon: "✅", title: "MCQ Worksheets",    desc: "10 Qs per worksheet with Assertion-Reason. Exact CBSE format — catch your gaps before the exam.", color: "#10B981" },
-  { icon: "✍️", title: "Q&A Practice",      desc: "Short and long answer model answers written by subject experts. Know exactly what examiners want.", color: "#F59E0B" },
-  { icon: "🤖", title: "AI Doubt Solver",   desc: "Instant NCERT-scoped answers. Understands Class 6–8 context — never over-explains or confuses.", color: "#EF4444" },
-  { icon: "📊", title: "Progress Tracker",  desc: "Visual chapter-by-chapter completion map, study streaks and performance stats — see your growth.", color: "#8B5CF6" },
+  { icon: "✅", title: "MCQ Worksheets",       desc: "2 worksheets per chapter · 10 questions each · Assertion-Reason format. Exact CBSE style — catch every gap before the exam.", color: "#10B981" },
+  { icon: "✍️", title: "Q&A Practice",          desc: "Short and long answer model answers written by subject experts. Know exactly what examiners expect.", color: "#F59E0B" },
+  { icon: "🤖", title: "AI Doubt Solver",       desc: "Instant NCERT-scoped answers. Understands Class 6–8 context — never over-explains or confuses.", color: "#EF4444" },
+  { icon: "📊", title: "Progress Tracker",      desc: "Visual chapter-by-chapter completion map, study streaks and performance stats — see your growth.", color: "#8B5CF6" },
+  { icon: "📚", title: "78 Chapters Covered",   desc: "Every chapter of Ganita Prakash (Maths) and Curiosity (Science) for Class 6, 7 and 8 — fully aligned to NCERT 2026.", color: "#7C3AED" },
+  { icon: "🎯", title: "CBSE Exam Ready",       desc: "Questions match CBSE board format including Assertion-Reason MCQs. Practise the exact question types that appear in exams.", color: "#06B6D4" },
 ];
 
 
 const testimonials = [
-  { name: "Priya Sharma", cls: "Class 7 · Delhi", text: "I scored 95/100 in Science after using Nucleus for 2 weeks. The snippet cards made revision so much faster than reading the textbook again.", avatar: "🧑‍🎓", score: "95/100" },
+  { name: "Priya Sharma", cls: "Class 7 · Delhi", text: "I scored 95/100 in Science after using Nucleus for 2 weeks. The MCQ worksheets showed me exactly which topics I was weak in.", avatar: "🧑‍🎓", score: "95/100" },
   { name: "Arjun Mehta", cls: "Class 8 · Mumbai", text: "MCQ worksheets are exactly like what comes in school exams. My maths marks went from 72 to 89 in one term.", avatar: "👨‍🎓", score: "+17 marks" },
   { name: "Kavya Reddy", cls: "Class 6 · Bengaluru", text: "The AI doubt solver explains things at my level — not complicated textbook language. I finally understand why, not just what.", avatar: "👩‍🎓", score: "⭐⭐⭐⭐⭐" },
 ];
 
 const steps = [
   { num: "01", title: "Pick your class", desc: "Choose Class 6, 7 or 8. Both Maths and Science are fully covered.", icon: "🎯" },
-  { num: "02", title: "Study each chapter", desc: "Read notes, flip through snippets and attempt MCQ + Q&A worksheets.", icon: "📖" },
+  { num: "02", title: "Study each chapter", desc: "Attempt MCQ worksheets to find gaps, then practise Q&A model answers for each chapter.", icon: "📖" },
   { num: "03", title: "Track your growth", desc: "Watch your progress bars fill up. Maintain daily streaks.", icon: "📈" },
 ];
 
@@ -201,7 +201,7 @@ export default function LandingPage() {
               <div className="text-4xl font-black gradient-text mb-1">₹0</div>
               <div className="text-xs text-slate-600 mb-6">No credit card needed</div>
               <div className="space-y-2.5 mb-7">
-                {["Browse all 78 chapters","Read all chapter notes","Snippet flashcards","Basic progress tracking","AI doubt solver (10/day)"].map(f => (
+                {["Browse all 78 chapters","MCQ worksheets (2 per chapter)","Q&A practice worksheets","Basic progress tracking","AI doubt solver (10/day)"].map(f => (
                   <div key={f} className="flex items-center gap-2 text-sm text-slate-400">
                     <span className="text-green-400 font-bold text-xs flex-shrink-0">✓</span>{f}
                   </div>
@@ -221,10 +221,10 @@ export default function LandingPage() {
               <div className="text-4xl font-black gradient-text mb-1">₹999</div>
               <div className="text-xs text-slate-500 mb-6">per year · just ₹83/month</div>
               <div className="space-y-2.5 mb-7">
-                {["Everything in Free","All worksheets unlocked","AI doubt solver (unlimited)","Full progress tracking","Study streaks &amp; analytics","Priority support"].map(f => (
+                {["Everything in Free","All worksheets unlocked","AI doubt solver (unlimited)","Full progress tracking","Study streaks & analytics","Priority support"].map(f => (
                   <div key={f} className="flex items-center gap-2 text-sm text-slate-300">
                     <span className="text-purple-400 font-bold text-xs flex-shrink-0">✓</span>
-                    <span dangerouslySetInnerHTML={{ __html: f }} />
+                    <span>{f}</span>
                   </div>
                 ))}
               </div>
