@@ -122,13 +122,29 @@ const content: Record<string, ChapterContent> = {
 };
 
 import { class6Content } from "./class6Content";
+import { class6ScienceContent } from "./class6ScienceContent";
 import { class7Content } from "./class7content";
+import { class7MathsBContent } from "./class7MathsBContent";
+import { class7ScienceAContent } from "./class7ScienceAContent";
+import { class7ScienceBContent } from "./class7ScienceBContent";
+import { class8MathsAContent } from "./class8MathsAContent";
+import { class8MathsBContent } from "./class8MathsBContent";
+import { class8ScienceAContent } from "./class8ScienceAContent";
+import { class8ScienceBContent } from "./class8ScienceBContent";
 import { generatedContent } from "./generatedContent";
 
 const allContent: Record<string, ChapterContent> = {
   ...content,
   ...class6Content,
+  ...class6ScienceContent,
   ...class7Content,
+  ...class7MathsBContent,
+  ...class7ScienceAContent,
+  ...class7ScienceBContent,
+  ...class8MathsAContent,
+  ...class8MathsBContent,
+  ...class8ScienceAContent,
+  ...class8ScienceBContent,
   ...generatedContent, // sheet data wins — always highest priority
 };
 
