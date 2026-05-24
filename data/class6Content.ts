@@ -1,6 +1,58 @@
 import type { ChapterContent } from "./content";
 
+const AR = [
+  "Both A and R are true, and R correctly explains A",
+  "Both A and R are true, but R does not correctly explain A",
+  "A is true, but R is false",
+  "A is false, but R is true",
+];
+
 export const class6Content: Record<string, ChapterContent> = {
+  "6-maths-1": {
+    notes: [], snippets: [],
+    mcq: [
+      [
+        { q: "Which of the following is an example of a repeating pattern?", options: ["1, 3, 5, 7, 9 …", "2, 3, 5, 7, 11 …", "1, 4, 9, 16 …", "1, 2, 4, 8 …"], answer: 0, explanation: "1,3,5,7,9… is the sequence of odd numbers — a repeating pattern with common difference 2." },
+        { q: "What is the next term in the pattern: 2, 6, 12, 20, 30, __?", options: ["40", "42", "44", "36"], answer: 1, explanation: "Differences are 4, 6, 8, 10 … (increasing by 2). Next difference = 12. 30+12 = 42." },
+        { q: "The 10th triangular number is:", options: ["45", "55", "66", "36"], answer: 1, explanation: "Triangular numbers: T(n) = n(n+1)/2. T(10) = 10×11/2 = 55." },
+        { q: "Which sequence represents square numbers?", options: ["1, 2, 3, 4, 5", "1, 4, 9, 16, 25", "2, 4, 6, 8, 10", "1, 3, 6, 10, 15"], answer: 1, explanation: "Square numbers are 1², 2², 3², 4², 5² = 1, 4, 9, 16, 25." },
+        { q: "In the pattern 1, 1, 2, 3, 5, 8, 13 … each term (after the first two) is:", options: ["Double the previous", "Sum of the two preceding terms", "The previous term plus 3", "A prime number"], answer: 1, explanation: "This is the Fibonacci sequence — each term = sum of the two before it." },
+        { q: "The pattern of triangular numbers begins: 1, 3, 6, 10 … The 5th triangular number is:", options: ["13", "15", "21", "28"], answer: 1, explanation: "T(5) = 5×6/2 = 15." },
+        { q: "Which rule generates the sequence 3, 7, 11, 15, 19 …?", options: ["Multiply by 2 and add 1", "Start at 3, add 4 each time", "Start at 3, multiply by 3", "Add the previous two terms"], answer: 1, explanation: "Starting at 3 and adding 4 each time gives 3, 7, 11, 15, 19." },
+        { q: "A pattern has the rule: T(n) = n². What is T(7)?", options: ["14", "42", "49", "56"], answer: 2, explanation: "T(7) = 7² = 49." },
+        { q: "The sum of the first n odd numbers equals:", options: ["n(n+1)/2", "n²", "2n", "n(n-1)"], answer: 1, explanation: "Sum of first n odd numbers = 1+3+5+…+(2n-1) = n²." },
+        { q: "What shape of numbers can be represented as dots arranged in equilateral triangles?", options: ["Square numbers", "Triangular numbers", "Prime numbers", "Even numbers"], answer: 1, explanation: "Triangular numbers (1, 3, 6, 10 …) can be arranged as equilateral triangle dot patterns." },
+      ],
+      [
+        { q: "Assertion: Square numbers can always be expressed as the sum of two triangular numbers.\nReason: T(n) + T(n-1) = n².", options: AR, answer: 0, explanation: "Both A and R are true; T(n)+T(n-1) = n(n+1)/2 + n(n-1)/2 = n²." },
+        { q: "Assertion: The sequence 2, 4, 8, 16, 32 … is an arithmetic sequence.\nReason: Consecutive terms have a common ratio of 2.", options: AR, answer: 3, explanation: "A is false — it is a geometric sequence (not arithmetic). R is true." },
+        { q: "Assertion: There are infinitely many prime numbers.\nReason: After every prime, the next prime can always be found.", options: AR, answer: 0, explanation: "Both A and R are true; Euclid proved there are infinitely many primes." },
+        { q: "Assertion: The pattern 1, 3, 6, 10, 15 … represents triangular numbers.\nReason: Each term is the sum of the first n natural numbers.", options: AR, answer: 0, explanation: "Both A and R are true; T(n) = 1+2+3+…+n = n(n+1)/2." },
+        { q: "Assertion: 0 is a triangular number.\nReason: T(0) = 0×1/2 = 0.", options: AR, answer: 0, explanation: "Both A and R are true; 0 is the 0th triangular number." },
+        { q: "Assertion: Every even number greater than 2 can be expressed as the sum of two prime numbers.\nReason: This is known as Goldbach's Conjecture.", options: AR, answer: 1, explanation: "Both A and R are true but R (naming it a conjecture) means it is unproven — R doesn't correctly explain A as fact." },
+        { q: "Assertion: Patterns help predict future terms in a sequence.\nReason: If a rule is identified, it can be applied to find any term.", options: AR, answer: 0, explanation: "Both A and R are true and R correctly explains A." },
+        { q: "Assertion: The Fibonacci sequence appears in nature.\nReason: Sunflower seeds, spiral shells and flower petals often follow Fibonacci counts.", options: AR, answer: 0, explanation: "Both A and R are true; Fibonacci patterns are widely observed in nature." },
+        { q: "Assertion: 1 is a prime number.\nReason: 1 has only one factor — itself.", options: AR, answer: 2, explanation: "A is false — 1 is NOT prime (primes must have exactly two distinct factors). R is true." },
+        { q: "Assertion: The sum of the first 5 square numbers is 55.\nReason: 1+4+9+16+25 = 55.", options: AR, answer: 0, explanation: "Both A and R are true; the addition confirms the assertion." },
+      ],
+    ],
+    qa: [
+      [
+        { q: "What is a pattern in mathematics? Give two examples.", a: "A pattern is a sequence that follows a definite rule. Examples: (1) 2, 4, 6, 8 … (even numbers, add 2 each time). (2) 1, 4, 9, 16 … (square numbers, T(n)=n²).", type: "short" },
+        { q: "Find the next three terms: 1, 3, 6, 10, 15, __, __, __", a: "These are triangular numbers T(n)=n(n+1)/2. Next: T(6)=21, T(7)=28, T(8)=36.", type: "short" },
+        { q: "What are square numbers? List the first six.", a: "Square numbers are obtained by multiplying a natural number by itself: 1²=1, 2²=4, 3²=9, 4²=16, 5²=25, 6²=36.", type: "short" },
+        { q: "Describe the Fibonacci sequence and write the first 10 terms.", a: "In the Fibonacci sequence, each term after the first two is the sum of the preceding two: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55.", type: "short" },
+        { q: "What is the 8th triangular number?", a: "T(n) = n(n+1)/2. T(8) = 8×9/2 = 36.", type: "short" },
+      ],
+      [
+        { q: "Explain how triangular and square numbers are related, with a formula and example.", a: "Every square number is the sum of two consecutive triangular numbers. Formula: T(n) + T(n-1) = n². Example: T(4)+T(3) = 10+6 = 16 = 4². This is because T(n)=n(n+1)/2 and T(n-1)=n(n-1)/2, and their sum = n(n+1+n-1)/2 = n².", type: "long" },
+        { q: "A school arranges chairs in a pattern: row 1 has 1 chair, row 2 has 3, row 3 has 5… How many chairs are in row 10? How many total chairs in 10 rows?", a: "Row n has (2n-1) chairs (odd numbers pattern). Row 10 = 2(10)-1 = 19 chairs.\nTotal in 10 rows = 1+3+5+7+9+11+13+15+17+19 = 10² = 100 chairs. (Sum of first n odd numbers = n².)", type: "long" },
+        { q: "Describe two patterns found in nature and explain the mathematics behind them.", a: "1. Sunflower seeds: Arranged in spirals that count Fibonacci numbers (usually 34 and 55 spirals). The Fibonacci ratio approximates the golden ratio (≈1.618), which creates the most efficient packing.\n2. Snowflakes: Have 6-fold symmetry — each arm is identical. This reflects the hexagonal crystal structure of water molecules, a repeating geometric pattern at the microscopic level.", type: "long" },
+        { q: "What are prime numbers? Explain why 1 is not a prime and why 2 is the only even prime.", a: "Prime numbers have exactly two distinct factors: 1 and themselves. Examples: 2, 3, 5, 7, 11.\nWhy 1 is not prime: 1 has only ONE factor (itself), not two. The definition requires exactly two distinct factors.\nWhy 2 is the only even prime: Every even number >2 is divisible by 2 (and by 1 and itself) — giving at least 3 factors. Only 2 has exactly two factors (1 and 2).", type: "long" },
+        { q: "Create a pattern of your own, write its rule, and find the 20th term.", a: "Example: Pattern: 5, 9, 13, 17, 21 … Rule: Start at 5, add 4 each time. T(n) = 5 + (n-1)×4 = 4n+1. T(20) = 4(20)+1 = 81.\n(Accept any valid pattern with correct rule and 20th term calculation.)", type: "long" },
+      ],
+    ],
+  },
   // ─────────────────────────────────────────────────────────────
   // 6-MATHS-2 : Lines and Angles
   // ─────────────────────────────────────────────────────────────

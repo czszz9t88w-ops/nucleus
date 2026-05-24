@@ -78,14 +78,25 @@ export default function QAClient() {
             ))}
           </div>
 
+          {/* Empty state */}
+          {questions.length === 0 && (
+            <div className="md:max-w-3xl glass rounded-2xl p-8 text-center">
+              <div className="text-4xl mb-3">✍️</div>
+              <h3 className="font-black text-white text-base mb-2">Worksheet coming soon</h3>
+              <p className="text-slate-500 text-sm">Questions for this worksheet are being prepared. Check back soon!</p>
+            </div>
+          )}
+
           <div className="md:max-w-3xl">
             {/* Show all controls */}
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-xs text-slate-500">Write your answer first, then reveal</p>
-              <button onClick={showAll} className="text-xs text-purple-400 hover:text-purple-300 transition-colors underline">
-                Show All
-              </button>
-            </div>
+            {questions.length > 0 && (
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs text-slate-500">Write your answer first, then reveal</p>
+                <button onClick={showAll} className="text-xs text-purple-400 hover:text-purple-300 transition-colors underline">
+                  Show All
+                </button>
+              </div>
+            )}
 
             {/* Questions */}
             <div className="space-y-4">

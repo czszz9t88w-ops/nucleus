@@ -107,6 +107,15 @@ export default function MCQClient() {
             </div>
           )}
 
+          {/* Empty state */}
+          {questions.length === 0 && (
+            <div className="md:max-w-3xl glass rounded-2xl p-8 text-center">
+              <div className="text-4xl mb-3">📝</div>
+              <h3 className="font-black text-white text-base mb-2">Worksheet coming soon</h3>
+              <p className="text-slate-500 text-sm">Questions for this worksheet are being prepared. Check back soon!</p>
+            </div>
+          )}
+
           {/* Questions */}
           <div className="md:max-w-3xl space-y-4">
             {questions.map((q, qi) => {
