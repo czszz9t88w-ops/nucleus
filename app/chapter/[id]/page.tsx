@@ -29,7 +29,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
       key: "mcq",
       icon: "✅",
       label: "MCQ + Assertion Worksheet",
-      sub: "2 worksheets · 10 questions each",
+      sub: "Elementary & Advanced · 10 questions each",
       href: `/chapter/${id}/worksheet/mcq`,
       wsKeys: [`${id}-mcq-0`, `${id}-mcq-1`],
     },
@@ -37,7 +37,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
       key: "qa",
       icon: "✍️",
       label: "Q&A Worksheet",
-      sub: "2 worksheets · model answers included",
+      sub: "Elementary & Advanced · model answers included",
       href: `/chapter/${id}/worksheet/qa`,
       wsKeys: [`${id}-qa-0`, `${id}-qa-1`],
     },
@@ -69,16 +69,8 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
             <Link href={`/subject/${chapter.classNum}/${chapter.subject}`}
               className="w-9 h-9 glass rounded-xl flex items-center justify-center text-slate-400 flex-shrink-0 mt-1 text-lg">‹</Link>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color }}>
-                  Class {chapter.classNum} · {subLabel[chapter.subject]} · Ch {chapter.num}
-                </div>
-                <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold leading-none"
-                  style={chapter.difficulty === "elementary"
-                    ? { background: "rgba(16,185,129,0.12)", color: "#10B981" }
-                    : { background: "rgba(245,158,11,0.12)", color: "#F59E0B" }}>
-                  {chapter.difficulty === "elementary" ? "Elementary" : "Advanced"}
-                </span>
+              <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color }}>
+                Class {chapter.classNum} · {subLabel[chapter.subject]} · Chapter {chapter.num}
               </div>
               <h1 className="text-xl font-black text-white leading-tight">{chapter.emoji} {chapter.title}</h1>
             </div>
@@ -108,12 +100,6 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
                   {["NCERT 2026", "CBSE", "Class " + chapter.classNum].map(tag => (
                     <span key={tag} className="glass text-[10px] px-2 py-0.5 rounded-full text-slate-500">{tag}</span>
                   ))}
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                    style={chapter.difficulty === "elementary"
-                      ? { background: "rgba(16,185,129,0.12)", color: "#10B981" }
-                      : { background: "rgba(245,158,11,0.12)", color: "#F59E0B" }}>
-                    ● {chapter.difficulty === "elementary" ? "Elementary" : "Advanced"}
-                  </span>
                 </div>
                 <div className="divider mb-4" />
                 <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>

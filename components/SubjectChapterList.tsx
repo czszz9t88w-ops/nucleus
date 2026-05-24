@@ -11,11 +11,6 @@ interface Props {
   sub: string;
 }
 
-const DIFF_CONFIG = {
-  elementary: { label: "Elementary", color: "#10B981", bg: "rgba(16,185,129,0.12)" },
-  advanced:   { label: "Advanced",   color: "#F59E0B", bg: "rgba(245,158,11,0.12)" },
-};
-
 // 3 completion states per chapter
 function getChapterState(id: string, visited: string[], done: string[]) {
   const wsKeys = [`${id}-mcq-0`, `${id}-mcq-1`, `${id}-qa-0`, `${id}-qa-1`];
@@ -73,20 +68,10 @@ export default function SubjectChapterList({ chapters, color, cls, sub }: Props)
         </div>
       </div>
 
-      {/* Chapter count + difficulty summary */}
+      {/* Chapter count */}
       <div className="flex items-center justify-between mb-3">
         <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
           {chapters.length} Chapters
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-            style={{ background: DIFF_CONFIG.elementary.bg, color: DIFF_CONFIG.elementary.color }}>
-            ● Elementary
-          </span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-            style={{ background: DIFF_CONFIG.advanced.bg, color: DIFF_CONFIG.advanced.color }}>
-            ● Advanced
-          </span>
         </div>
       </div>
 
@@ -94,7 +79,6 @@ export default function SubjectChapterList({ chapters, color, cls, sub }: Props)
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
         {chapters.map((ch) => {
           const state = getChapterState(ch.id, visited, wsDone);
-          const diff  = DIFF_CONFIG[ch.difficulty];
           const wsKeys = [`${ch.id}-mcq-0`, `${ch.id}-mcq-1`, `${ch.id}-qa-0`, `${ch.id}-qa-1`];
           const wsCount = wsKeys.filter((k) => wsDone.includes(k)).length;
           const wsPct   = Math.round((wsCount / wsKeys.length) * 100);
@@ -123,11 +107,6 @@ export default function SubjectChapterList({ chapters, color, cls, sub }: Props)
                   {ch.title}
                 </p>
                 <div className="flex items-center gap-2 mt-1">
-                  {/* Difficulty pill */}
-                  <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold leading-none"
-                    style={{ background: diff.bg, color: diff.color }}>
-                    {diff.label}
-                  </span>
                   {/* Worksheet progress */}
                   {state === "inprogress" && wsCount > 0 && (
                     <div className="flex items-center gap-1.5 flex-1 min-w-0">

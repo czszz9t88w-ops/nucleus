@@ -80,11 +80,11 @@ export default function MCQClient() {
 
           {/* Sheet selector */}
           <div className="flex glass rounded-xl p-1 mb-5 md:max-w-xs">
-            {content.mcq.map((_, i) => (
+            {(["Elementary", "Advanced"] as const).map((label, i) => (
               <button key={i} onClick={() => { setSheet(i); reset(); }}
                 className="flex-1 py-2 rounded-lg text-sm font-semibold transition-all"
                 style={sheet === i ? { background: "var(--gradient-primary)", color: "#fff" } : { color: "var(--text-muted)" }}>
-                Worksheet {i + 1}
+                {label}
               </button>
             ))}
           </div>
