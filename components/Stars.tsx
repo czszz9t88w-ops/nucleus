@@ -5,6 +5,8 @@ export default function Stars() {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const canvas = ref.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -43,6 +45,7 @@ export default function Stars() {
       animId = requestAnimationFrame(draw);
     }
     draw();
+
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
@@ -52,6 +55,7 @@ export default function Stars() {
   return (
     <canvas
       ref={ref}
+      aria-hidden="true"
       style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}
     />
   );

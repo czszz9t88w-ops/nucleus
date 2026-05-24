@@ -11,83 +11,145 @@ interface Props {
   sub: string;
 }
 
+const DIFF_CONFIG = {
+  elementary: { label: "Elementary", color: "#10B981", bg: "rgba(16,185,129,0.12)" },
+  advanced:   { label: "Advanced",   color: "#F59E0B", bg: "rgba(245,158,11,0.12)" },
+};
+
+// 3 completion states per chapter
+function getChapterState(id: string, visited: string[], done: string[]) {
+  const wsKeys = [`${id}-mcq-0`, `${id}-mcq-1`, `${id}-qa-0`, `${id}-qa-1`];
+  const wsDone = wsKeys.filter((k) => done.includes(k)).length;
+  if (wsDone === wsKeys.length) return "complete";
+  if (wsDone > 0 || visited.includes(id)) return "inprogress";
+  return "notstarted";
+}
+
 export default function SubjectChapterList({ chapters, color, cls, sub }: Props) {
-  const [visited, setVisited] = useState<string[]>([]);
-  const [worksheetsDone, setWorksheetsDone] = useState<string[]>([]);
+  const [visited, setVisited]   = useState<string[]>([]);
+  const [wsDone, setWsDone]     = useState<string[]>([]);
 
   useEffect(() => {
     const p = getProgress();
     setVisited(p.chaptersVisited);
-    setWorksheetsDone(p.worksheetsDone);
+    setWsDone(p.worksheetsDone);
   }, []);
 
-  const done = chapters.filter((ch) => visited.includes(ch.id)).length;
-  const pct = chapters.length ? Math.round((done / chapters.length) * 100) : 0;
+  const completedCount  = chapters.filter((ch) => getChapterState(ch.id, visited, wsDone) === "complete").length;
+  const inProgressCount = chapters.filter((ch) => getChapterState(ch.id, visited, wsDone) === "inprogress").length;
+  const pct = chapters.length ? Math.round((completedCount / chapters.length) * 100) : 0;
 
   return (
     <>
       {/* Progress summary */}
-      <div className="glass-card rounded-2xl p-4 mb-5 flex items-center gap-4">
-        <div className="flex-1">
-          <div className="flex justify-between text-xs mb-2">
-            <span className="text-slate-500">{done} of {chapters.length} chapters visited</span>
-            <span className="font-bold" style={{ color }}>{pct}%</span>
+      <div className="glass-card rounded-2xl p-4 mb-5">
+        <div className="flex items-center justify-between text-xs mb-2">
+          <div className="flex items-center gap-3">
+            <span style={{ color: "var(--text-muted)" }}>{completedCount} complete</span>
+            {inProgressCount > 0 && (
+              <span style={{ color }}>· {inProgressCount} in progress</span>
+            )}
           </div>
-          <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-            <div className="h-full rounded-full transition-all duration-700"
-              style={{ width: `${pct}%`, background: `linear-gradient(90deg,${color},${color}88)` }} />
+          <span className="font-bold" style={{ color }}>{pct}%</span>
+        </div>
+        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
+          <div className="h-full rounded-full transition-all duration-700"
+            style={{ width: `${pct}%`, background: `linear-gradient(90deg,${color},${color}88)` }} />
+        </div>
+        {/* Legend */}
+        <div className="flex items-center gap-4 mt-3">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+            <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>Complete</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
+            <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>In Progress</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+            <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>Not Started</span>
           </div>
         </div>
       </div>
 
-      {/* Chapter list */}
-      <div className="text-[11px] font-bold text-slate-600 uppercase tracking-widest mb-3">
-        {chapters.length} Chapters
+      {/* Chapter count + difficulty summary */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+          {chapters.length} Chapters
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+            style={{ background: DIFF_CONFIG.elementary.bg, color: DIFF_CONFIG.elementary.color }}>
+            ● Elementary
+          </span>
+          <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+            style={{ background: DIFF_CONFIG.advanced.bg, color: DIFF_CONFIG.advanced.color }}>
+            ● Advanced
+          </span>
+        </div>
       </div>
+
+      {/* Chapter list */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
         {chapters.map((ch) => {
-          const isVisited = visited.includes(ch.id);
+          const state = getChapterState(ch.id, visited, wsDone);
+          const diff  = DIFF_CONFIG[ch.difficulty];
           const wsKeys = [`${ch.id}-mcq-0`, `${ch.id}-mcq-1`, `${ch.id}-qa-0`, `${ch.id}-qa-1`];
-          const wsDone = wsKeys.filter((k) => worksheetsDone.includes(k)).length;
-          const chPct = Math.round((wsDone / wsKeys.length) * 100);
-          const allDone = wsDone === wsKeys.length && wsDone > 0;
+          const wsCount = wsKeys.filter((k) => wsDone.includes(k)).length;
+          const wsPct   = Math.round((wsCount / wsKeys.length) * 100);
+
+          const stateStyles = {
+            complete:   { num: { background: "rgba(16,185,129,0.2)", color: "#10B981", border: "1px solid rgba(16,185,129,0.4)" }, card: { borderColor: "rgba(16,185,129,0.25)" } },
+            inprogress: { num: { background: `${color}25`,           color,             border: `1px solid ${color}44` },           card: { borderColor: `${color}33` } },
+            notstarted: { num: { background: "rgba(255,255,255,0.04)", color: "#475569", border: "1px solid rgba(255,255,255,0.08)" }, card: {} },
+          }[state];
 
           return (
             <Link key={ch.id} href={`/chapter/${ch.id}`}
               className="glass-card flex items-center gap-3.5 px-4 py-3.5 rounded-xl transition-all active:scale-[0.98] group"
-              style={allDone ? { borderColor: `${color}44` } : {}}>
+              style={stateStyles.card}>
 
-              {/* Chapter number */}
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0"
-                style={isVisited
-                  ? { background: `${color}25`, color, border: `1px solid ${color}44` }
-                  : { background: "rgba(255,255,255,0.04)", color: "#475569", border: "1px solid rgba(255,255,255,0.08)" }}>
-                {ch.num}
+              {/* Chapter number with state colour */}
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0 flex-shrink-0"
+                style={stateStyles.num}>
+                {state === "complete" ? "✓" : ch.num}
               </div>
 
               <span className="text-xl flex-shrink-0">{ch.emoji}</span>
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-300 truncate group-hover:text-white transition-colors">{ch.title}</p>
-                {isVisited && wsDone > 0 && (
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-0.5 bg-slate-800 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${chPct}%`, background: color }} />
+                <p className="text-sm font-semibold text-slate-300 truncate group-hover:text-white transition-colors">
+                  {ch.title}
+                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  {/* Difficulty pill */}
+                  <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold leading-none"
+                    style={{ background: diff.bg, color: diff.color }}>
+                    {diff.label}
+                  </span>
+                  {/* Worksheet progress */}
+                  {state === "inprogress" && wsCount > 0 && (
+                    <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                      <div className="flex-1 h-0.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
+                        <div className="h-full rounded-full" style={{ width: `${wsPct}%`, background: color }} />
+                      </div>
+                      <span className="text-[9px] font-semibold flex-shrink-0" style={{ color }}>{wsCount}/4</span>
                     </div>
-                    <span className="text-[10px] font-semibold flex-shrink-0" style={{ color }}>{chPct}%</span>
-                  </div>
-                )}
-                {isVisited && wsDone === 0 && (
-                  <p className="text-[10px] text-slate-600 mt-0.5">Visited · no worksheets yet</p>
-                )}
+                  )}
+                  {state === "inprogress" && wsCount === 0 && (
+                    <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>Visited</span>
+                  )}
+                  {state === "complete" && (
+                    <span className="text-[9px] font-semibold text-emerald-500">All done</span>
+                  )}
+                </div>
               </div>
 
-              {allDone ? (
-                <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black flex-shrink-0"
-                  style={{ background: color }}>✓</div>
-              ) : (
-                <div className="text-slate-700 group-hover:text-slate-400 transition-colors text-base flex-shrink-0">›</div>
-              )}
+              <div className="text-base flex-shrink-0 transition-colors group-hover:text-slate-400"
+                style={{ color: state === "complete" ? "#10B981" : "var(--text-dimmer)" }}>
+                {state === "complete" ? "✓" : "›"}
+              </div>
             </Link>
           );
         })}
