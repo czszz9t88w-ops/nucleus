@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* ── Core palette ─────────────────────────────────── */
   --space-dark:   #06070F;
   --space-deep:   #0A0B1A;
   --space-mid:    #0D1030;
@@ -12,6 +13,25 @@
   --nova-red:     #EF4444;
   --glass-bg:     rgba(255,255,255,0.05);
   --glass-border: rgba(255,255,255,0.10);
+
+  /* ── Gradients (single source of truth) ──────────── */
+  --gradient-primary: linear-gradient(135deg, #7C3AED, #06B6D4);
+  --gradient-warm:    linear-gradient(135deg, #F59E0B, #EF4444);
+  --gradient-text:    linear-gradient(135deg, #A855F7 0%, #06B6D4 100%);
+  --gradient-maths:   linear-gradient(90deg, #7C3AED, #7C3AED88);
+  --gradient-science: linear-gradient(90deg, #06B6D4, #06B6D488);
+
+  /* ── Surface tokens ───────────────────────────────── */
+  --topbar-bg:        rgba(6,7,15,0.92);
+  --topbar-border:    rgba(255,255,255,0.06);
+  --sidebar-bg:       rgba(6,7,15,0.98);
+  --sidebar-border:   rgba(255,255,255,0.07);
+  --divider-color:    rgba(255,255,255,0.07);
+  --page-gradient:    radial-gradient(ellipse at 50% 0%, #0F0820 0%, #06070F 60%);
+
+  /* ── Text ─────────────────────────────────────────── */
+  --text-muted:       #64748B;
+  --text-dimmer:      #475569;
 }
 
 @theme inline {
@@ -191,11 +211,49 @@ body {
 }
 
 /* ── Focus ring ─────────────────────────────────────── */
-input:focus, button:focus-visible, a:focus-visible {
+button:focus-visible, a:focus-visible {
   outline: 2px solid rgba(124,58,237,0.6);
   outline-offset: 2px;
 }
-input:focus { outline: none; }
+input:focus {
+  outline: 2px solid rgba(124,58,237,0.5);
+  outline-offset: 0;
+}
+
+/* ── Layout utilities ───────────────────────────────── */
+.page-bg  { background: var(--page-gradient); }
+.topbar   {
+  background: var(--topbar-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--topbar-border);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.sidebar  {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+}
+.gradient-bg  { background: var(--gradient-primary); }
+.divider-h    { border-top: 1px solid var(--divider-color); margin: 0; }
+.nav-active   {
+  background: rgba(124,58,237,0.15);
+  color: #A855F7;
+  border-left: 2px solid #7C3AED;
+}
+.form-input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: var(--star-white);
+  border-radius: 12px;
+  padding: 12px 16px;
+  width: 100%;
+  font-size: 0.875rem;
+  transition: border-color 0.15s;
+}
+.form-input::placeholder { color: var(--text-muted); }
+.form-input:focus { border-color: rgba(124,58,237,0.5); }
 
 /* ── Prose-like text areas ──────────────────────────── */
 .body-text {

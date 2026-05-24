@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Stars from "@/components/Stars";
 import BottomNav from "@/components/BottomNav";
-import Chatbot from "@/components/Chatbot";
 import Sidebar from "@/components/Sidebar";
 import ClassProgressBars from "@/components/ClassProgressBars";
 
@@ -22,17 +21,15 @@ export default async function ClassPage({ params }: { params: Promise<{ classNum
   const chapterCounts = cls === 6 ? { maths: 10, science: 10 } : cls === 7 ? { maths: 13, science: 13 } : { maths: 16, science: 16 };
 
   return (
-    <div className="relative min-h-screen pb-24 md:pb-10 overflow-hidden"
-      style={{ background: "radial-gradient(ellipse at 50% 0%, #0F0820 0%, #06070F 60%)" }}>
+    <div className="relative min-h-screen pb-24 md:pb-10 overflow-hidden page-bg">
       <Stars />
       <Sidebar />
 
       <div className="relative z-10 md:ml-64">
         {/* Desktop breadcrumb */}
-        <div className="hidden md:flex items-center gap-2 px-8 py-3.5 sticky top-0 z-30"
-          style={{ background:"rgba(6,7,15,0.92)", backdropFilter:"blur(16px)", borderBottom:"1px solid rgba(255,255,255,0.06)" }}>
-          <Link href="/home" className="text-slate-600 hover:text-slate-300 text-xs transition-colors">Home</Link>
-          <span className="text-slate-800 text-xs">/</span>
+        <div className="hidden md:flex items-center gap-2 px-8 py-3.5 topbar">
+          <Link href="/home" className="text-xs transition-colors hover:text-slate-300" style={{ color: "var(--text-muted)" }}>Home</Link>
+          <span className="text-xs" style={{ color: "var(--text-dimmer)" }}>/</span>
           <span className="text-slate-300 text-xs font-semibold">Class {cls}</span>
         </div>
 
@@ -43,7 +40,7 @@ export default async function ClassPage({ params }: { params: Promise<{ classNum
             <Link href="/home" className="w-9 h-9 glass rounded-xl flex items-center justify-center text-slate-400 text-lg flex-shrink-0">‹</Link>
             <div>
               <h1 className="text-2xl font-black text-white">{meta.emoji} Class {cls}</h1>
-              <p className="text-slate-600 text-xs mt-0.5">Select a subject</p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>Select a subject</p>
             </div>
           </div>
 
@@ -59,7 +56,7 @@ export default async function ClassPage({ params }: { params: Promise<{ classNum
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full"
                   style={{ background: `${meta.color}20`, color: meta.color }}>{meta.level}</span>
               </div>
-              <p className="text-slate-500 text-sm">{meta.desc}</p>
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>{meta.desc}</p>
             </div>
           </div>
 
@@ -69,12 +66,13 @@ export default async function ClassPage({ params }: { params: Promise<{ classNum
           {/* Tip */}
           <div className="glass-card rounded-xl p-4 flex items-center gap-3 mt-5">
             <span className="text-lg flex-shrink-0">🎯</span>
-            <p className="text-xs text-slate-500 leading-relaxed">Class {cls} concepts form the foundation for Classes 9–10 and competitive exam preparation.</p>
+            <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+              Class {cls} concepts form the foundation for Classes 9–10 and competitive exam preparation.
+            </p>
           </div>
         </div>
       </div>
 
-      <Chatbot />
       <BottomNav />
     </div>
   );

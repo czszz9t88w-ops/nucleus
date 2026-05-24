@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Stars from "@/components/Stars";
 import BottomNav from "@/components/BottomNav";
-import Chatbot from "@/components/Chatbot";
 import Sidebar from "@/components/Sidebar";
 import SubjectChapterList from "@/components/SubjectChapterList";
 import { getChapters, type ClassNum, type Subject } from "@/data/curriculum";
@@ -25,19 +24,17 @@ export default async function SubjectPage({ params }: { params: Promise<{ classN
   const { color, icon, book, label } = subjectMeta[sub];
 
   return (
-    <div className="relative min-h-screen pb-24 md:pb-10 overflow-hidden"
-      style={{ background: "radial-gradient(ellipse at 50% 0%, #0F0820 0%, #06070F 60%)" }}>
+    <div className="relative min-h-screen pb-24 md:pb-10 overflow-hidden page-bg">
       <Stars />
       <Sidebar />
 
       <div className="relative z-10 md:ml-64">
         {/* Desktop breadcrumb */}
-        <div className="hidden md:flex items-center gap-2 px-8 py-3.5 sticky top-0 z-30"
-          style={{ background:"rgba(6,7,15,0.92)", backdropFilter:"blur(16px)", borderBottom:"1px solid rgba(255,255,255,0.06)" }}>
-          <Link href="/home" className="text-slate-600 hover:text-slate-300 text-xs transition-colors">Home</Link>
-          <span className="text-slate-800 text-xs">/</span>
-          <Link href={`/class/${cls}`} className="text-slate-600 hover:text-slate-300 text-xs transition-colors">Class {cls}</Link>
-          <span className="text-slate-800 text-xs">/</span>
+        <div className="hidden md:flex items-center gap-2 px-8 py-3.5 topbar">
+          <Link href="/home" className="text-xs transition-colors hover:text-slate-300" style={{ color: "var(--text-muted)" }}>Home</Link>
+          <span className="text-xs" style={{ color: "var(--text-dimmer)" }}>/</span>
+          <Link href={`/class/${cls}`} className="text-xs transition-colors hover:text-slate-300" style={{ color: "var(--text-muted)" }}>Class {cls}</Link>
+          <span className="text-xs" style={{ color: "var(--text-dimmer)" }}>/</span>
           <span className="text-slate-300 text-xs font-semibold">{label}</span>
         </div>
 
@@ -59,20 +56,21 @@ export default async function SubjectPage({ params }: { params: Promise<{ classN
           <div className="hidden md:flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl"
-                style={{ background:`${color}15`, border:`1px solid ${color}33` }}>{icon}</div>
+                style={{ background: `${color}15`, border: `1px solid ${color}33` }}>{icon}</div>
               <div>
                 <h1 className="text-3xl font-black text-white">{label}</h1>
                 <p className="text-sm mt-0.5 font-medium" style={{ color }}>{book} · Class {cls} · {chapters.length} chapters</p>
               </div>
             </div>
-            <div className="glass px-3 py-1.5 rounded-xl text-xs text-slate-500 font-medium">NCERT 2026 · CBSE</div>
+            <div className="glass px-3 py-1.5 rounded-xl text-xs font-medium" style={{ color: "var(--text-muted)" }}>
+              NCERT 2026 · CBSE
+            </div>
           </div>
 
           <SubjectChapterList chapters={chapters} color={color} cls={cls} sub={sub} />
         </div>
       </div>
 
-      <Chatbot />
       <BottomNav />
     </div>
   );

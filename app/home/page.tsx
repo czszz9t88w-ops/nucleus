@@ -4,7 +4,6 @@ import Link from "next/link";
 import Stars from "@/components/Stars";
 import BottomNav from "@/components/BottomNav";
 import Sidebar from "@/components/Sidebar";
-import Chatbot from "@/components/Chatbot";
 import { getProgress, ProgressData } from "@/lib/progress";
 import { getChapterById } from "@/data/curriculum";
 
@@ -58,17 +57,15 @@ export default function HomePage() {
   const isFirstTime = visited.length === 0 && !lastChapter;
 
   return (
-    <div className="relative min-h-screen pb-24 md:pb-10 overflow-hidden"
-      style={{ background: "radial-gradient(ellipse at 50% 0%, #0F0820 0%, #06070F 60%)" }}>
+    <div className="relative min-h-screen pb-24 md:pb-10 overflow-hidden page-bg">
       <Stars />
       <Sidebar />
 
       <div className="relative z-10 md:ml-64">
         {/* Desktop top bar */}
-        <div className="hidden md:flex items-center justify-between px-8 py-3.5 sticky top-0 z-30"
-          style={{ background: "rgba(6,7,15,0.92)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="hidden md:flex items-center justify-between px-8 py-3.5 topbar">
           <div>
-            <p className="text-slate-600 text-xs">{getGreeting()},</p>
+            <p className="text-xs" style={{ color: "var(--text-muted)" }}>{getGreeting()},</p>
             <h1 className="text-base font-black text-white">{profile.name || "Explorer"} 👋</h1>
           </div>
           <div className="flex items-center gap-2.5">
@@ -77,8 +74,10 @@ export default function HomePage() {
                 🔥 {progress?.streak}-day streak
               </div>
             )}
-            <div className="glass px-3 py-1.5 rounded-xl text-xs text-slate-500">NCERT 2026</div>
-            <Link href="/setup" className="w-8 h-8 glass rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-300 transition-colors text-sm">
+            <div className="glass px-3 py-1.5 rounded-xl text-xs" style={{ color: "var(--text-muted)" }}>NCERT 2026</div>
+            <Link href="/setup"
+              className="w-8 h-8 glass rounded-xl flex items-center justify-center text-sm transition-colors"
+              style={{ color: "var(--text-muted)" }}>
               ⚙️
             </Link>
           </div>
@@ -104,7 +103,7 @@ export default function HomePage() {
               <div key={s.label} className="glass-card p-3 md:p-4 text-center rounded-2xl">
                 <div className="text-lg md:text-xl mb-0.5">{s.icon}</div>
                 <div className="text-lg md:text-2xl font-black text-white">{s.val}</div>
-                <div className="text-[10px] text-slate-600 mt-0.5 hidden md:block">{s.label}</div>
+                <div className="text-[10px] mt-0.5 hidden md:block" style={{ color: "var(--text-muted)" }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -112,7 +111,9 @@ export default function HomePage() {
           {/* Continue Learning card */}
           {lastChapter && (
             <div className="mb-6">
-              <h2 className="text-[11px] font-bold text-slate-600 uppercase tracking-widest mb-3">Continue Learning</h2>
+              <h2 className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: "var(--text-muted)" }}>
+                Continue Learning
+              </h2>
               <Link href={`/chapter/${lastChapter.id}`}
                 className="glass-card p-5 flex items-center gap-4 transition-all active:scale-[0.98] group block rounded-2xl"
                 style={{ borderColor: `${subjectColor}44` }}>
@@ -125,9 +126,9 @@ export default function HomePage() {
                     Class {lastChapter.classNum} · {lastChapter.subject === "maths" ? "Mathematics" : "Science"} · Ch {lastChapter.num}
                   </div>
                   <div className="font-black text-white text-sm md:text-base truncate">{lastChapter.title}</div>
-                  <div className="text-xs text-slate-600 mt-0.5">Tap to continue →</div>
+                  <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>Tap to continue →</div>
                 </div>
-                <div className="text-2xl text-slate-700 group-hover:text-slate-400 transition-colors flex-shrink-0">›</div>
+                <div className="text-2xl flex-shrink-0 transition-colors group-hover:text-slate-400" style={{ color: "var(--text-muted)" }}>›</div>
               </Link>
             </div>
           )}
@@ -138,18 +139,17 @@ export default function HomePage() {
               style={{ borderColor: "rgba(124,58,237,0.25)" }}>
               <div className="text-4xl mb-3">🚀</div>
               <h3 className="font-black text-white text-base mb-1.5">Ready to start?</h3>
-              <p className="text-slate-500 text-sm mb-4 max-w-xs mx-auto">
+              <p className="text-sm mb-4 max-w-xs mx-auto" style={{ color: "var(--text-muted)" }}>
                 Pick a class below and open your first chapter. Your progress is saved automatically.
               </p>
-              <Link href="/class/6"
-                className="btn-primary inline-block px-6 py-2.5 rounded-xl text-sm">
+              <Link href="/class/6" className="btn-primary inline-block px-6 py-2.5 rounded-xl text-sm">
                 Start with Class 6 →
               </Link>
             </div>
           )}
 
           {/* Class cards */}
-          <h2 className="text-[11px] font-bold text-slate-600 uppercase tracking-widest mb-3">
+          <h2 className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: "var(--text-muted)" }}>
             {lastChapter ? "All Classes" : "Choose a Class"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
@@ -165,25 +165,27 @@ export default function HomePage() {
                   </div>
                   <div className="flex-1 md:flex-none md:w-full min-w-0">
                     <div className="font-black text-base md:text-lg text-white">{c.label}</div>
-                    <div className="text-xs text-slate-500 mt-0.5">{c.sub}</div>
-                    <div className="mt-2.5 h-1 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>{c.sub}</div>
+                    <div className="mt-2.5 h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
                       <div className="h-full rounded-full transition-all duration-700"
                         style={{ width: `${pct}%`, background: `linear-gradient(90deg,${c.color},${c.color}88)` }} />
                     </div>
-                    <div className="text-xs text-slate-600 mt-1">{classVisited}/{c.total} chapters</div>
+                    <div className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>{classVisited}/{c.total} chapters</div>
                   </div>
-                  <div className="text-slate-700 text-xl md:hidden flex-shrink-0">›</div>
+                  <div className="text-xl md:hidden flex-shrink-0" style={{ color: "var(--text-muted)" }}>›</div>
                 </Link>
               );
             })}
           </div>
 
           {/* Subject shortcuts */}
-          <h2 className="text-[11px] font-bold text-slate-600 uppercase tracking-widest mb-3">Quick Jump</h2>
+          <h2 className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: "var(--text-muted)" }}>
+            Quick Jump
+          </h2>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
             {[6,7,8].flatMap(cls => [
-              { href: `/subject/${cls}/maths`,   icon: "🔢", label: `${cls}M`, color: "#7C3AED" },
-              { href: `/subject/${cls}/science`,  icon: "🔬", label: `${cls}S`, color: "#06B6D4" },
+              { href: `/subject/${cls}/maths`,  icon: "🔢", label: `${cls}M` },
+              { href: `/subject/${cls}/science`, icon: "🔬", label: `${cls}S` },
             ]).map(item => (
               <Link key={item.href} href={item.href}
                 className="glass-card rounded-xl p-3 text-center group transition-all active:scale-95">
@@ -197,14 +199,13 @@ export default function HomePage() {
           <div className="glass-card rounded-2xl p-4 flex items-start gap-3 mb-2">
             <span className="text-xl flex-shrink-0 mt-0.5">💡</span>
             <div>
-              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-0.5">Study Tip</div>
-              <p className="text-xs text-slate-500 leading-relaxed">{tip}</p>
+              <div className="text-[11px] font-bold uppercase tracking-wide mb-0.5 text-slate-400">Study Tip</div>
+              <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>{tip}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <Chatbot />
       <BottomNav />
     </div>
   );

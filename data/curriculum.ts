@@ -105,6 +105,18 @@ const chapters: Chapter[] = [
 
 export default chapters;
 
+export function getNextChapterId(currentId: string): string | null {
+  const idx = chapters.findIndex((c) => c.id === currentId);
+  if (idx === -1 || idx >= chapters.length - 1) return null;
+  return chapters[idx + 1].id;
+}
+
+export function getPrevChapterId(currentId: string): string | null {
+  const idx = chapters.findIndex((c) => c.id === currentId);
+  if (idx <= 0) return null;
+  return chapters[idx - 1].id;
+}
+
 export function getChapters(classNum: ClassNum, subject: Subject): Chapter[] {
   return chapters.filter((c) => c.classNum === classNum && c.subject === subject);
 }
