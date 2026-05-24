@@ -27,16 +27,18 @@ const chapters: Chapter[] = [
   { id: "6-maths-10", classNum: 6, subject: "maths", num: 10, difficulty: "advanced",   title: "The Other Side of Zero",         emoji: "0️⃣", videoId: "7dn8KFqQ6iY" },
 
   // ── CLASS 6 SCIENCE ───────────────────────────────────────────
-  { id: "6-science-1",  classNum: 6, subject: "science", num: 1,  difficulty: "elementary", title: "The Wonderful World of Science",           emoji: "🔭", videoId: "9RMHBgGSida" },
-  { id: "6-science-2",  classNum: 6, subject: "science", num: 2,  difficulty: "elementary", title: "Diversity in the Living World",            emoji: "🌿", videoId: "1cBpsyHvDhg" },
-  { id: "6-science-3",  classNum: 6, subject: "science", num: 3,  difficulty: "elementary", title: "Mindful Eating: A Path to a Healthy Body", emoji: "🥗", videoId: "c-4oqAHHQDQ" },
-  { id: "6-science-4",  classNum: 6, subject: "science", num: 4,  difficulty: "elementary", title: "Seeing Without Touching",                  emoji: "🧲", videoId: "hFAOXdXZ5TM" },
-  { id: "6-science-5",  classNum: 6, subject: "science", num: 5,  difficulty: "elementary", title: "A Journey Through States of Matter",       emoji: "💧", videoId: "3AWKMjHJuLk" },
-  { id: "6-science-6",  classNum: 6, subject: "science", num: 6,  difficulty: "elementary", title: "Nature's Treasure",                        emoji: "🌳", videoId: "b7Dg4yVWDz8" },
-  { id: "6-science-7",  classNum: 6, subject: "science", num: 7,  difficulty: "elementary", title: "Temperature and its Measurement",          emoji: "🌡️", videoId: "L6IcV8LQWZQ" },
-  { id: "6-science-8",  classNum: 6, subject: "science", num: 8,  difficulty: "elementary", title: "A Treat for Mosquitoes",                   emoji: "🦟", videoId: "jJn0VKyCIoI" },
-  { id: "6-science-9",  classNum: 6, subject: "science", num: 9,  difficulty: "elementary", title: "From Mud to Pot",                          emoji: "🏺", videoId: "5oqfMoB5nkQ" },
-  { id: "6-science-10", classNum: 6, subject: "science", num: 10, difficulty: "advanced",   title: "Wonders of Light",                         emoji: "💡", videoId: "J4MBzEYhaBg" },
+  { id: "6-science-1",  classNum: 6, subject: "science", num: 1,  difficulty: "elementary", title: "The Wonderful World of Science",                  emoji: "🔭", videoId: "9RMHBgGSida" },
+  { id: "6-science-2",  classNum: 6, subject: "science", num: 2,  difficulty: "elementary", title: "Diversity in the Living World",                   emoji: "🌿", videoId: "1cBpsyHvDhg" },
+  { id: "6-science-3",  classNum: 6, subject: "science", num: 3,  difficulty: "elementary", title: "Mindful Eating: A Path to a Healthy Body",        emoji: "🥗", videoId: "c-4oqAHHQDQ" },
+  { id: "6-science-4",  classNum: 6, subject: "science", num: 4,  difficulty: "elementary", title: "Exploring Magnets",                               emoji: "🧲", videoId: "hFAOXdXZ5TM" },
+  { id: "6-science-5",  classNum: 6, subject: "science", num: 5,  difficulty: "elementary", title: "Measurement of Length and Motion",                emoji: "📏", videoId: "3AWKMjHJuLk" },
+  { id: "6-science-6",  classNum: 6, subject: "science", num: 6,  difficulty: "elementary", title: "Materials Around Us",                             emoji: "🧱", videoId: "b7Dg4yVWDz8" },
+  { id: "6-science-7",  classNum: 6, subject: "science", num: 7,  difficulty: "elementary", title: "Temperature and its Measurement",                 emoji: "🌡️", videoId: "L6IcV8LQWZQ" },
+  { id: "6-science-8",  classNum: 6, subject: "science", num: 8,  difficulty: "elementary", title: "A Journey through States of Water",               emoji: "💧", videoId: "jJn0VKyCIoI" },
+  { id: "6-science-9",  classNum: 6, subject: "science", num: 9,  difficulty: "elementary", title: "Methods of Separation in Everyday Life",          emoji: "🔬", videoId: "5oqfMoB5nkQ" },
+  { id: "6-science-10", classNum: 6, subject: "science", num: 10, difficulty: "advanced",   title: "Living Creatures: Exploring their Characteristics", emoji: "🦎", videoId: "J4MBzEYhaBg" },
+  { id: "6-science-11", classNum: 6, subject: "science", num: 11, difficulty: "elementary", title: "Nature's Treasures",                              emoji: "🌳", videoId: "" },
+  { id: "6-science-12", classNum: 6, subject: "science", num: 12, difficulty: "advanced",   title: "Beyond Earth",                                    emoji: "🚀", videoId: "" },
 
   // ── CLASS 7 MATHS ────────────────────────────────────────────
   { id: "7-maths-1",  classNum: 7, subject: "maths", num: 1,  difficulty: "elementary", title: "Large Numbers Around Us",         emoji: "🔢", videoId: "3En_SfpFkmo" },
