@@ -391,6 +391,9 @@ QA_DATA = [
 # Pre-filled chapters (have sample content already): skip them from blank rows.
 PREFILLED_IDS = {"6-maths-1", "6-maths-2", "6-maths-3"}
 
+# Introductory science chapters — no content rows needed in the sheet.
+EXCLUDED_IDS  = {"6-science-1", "7-science-1", "8-science-1"}
+
 def load_chapters_from_curriculum():
     import re, os
     curriculum_path = os.path.join(os.path.dirname(__file__), "..", "data", "curriculum.ts")
@@ -404,9 +407,9 @@ def load_chapters_from_curriculum():
             chapters.append((id_m.group(1), title_m.group(1)))
     return chapters
 
-ALL_CHAPTERS          = load_chapters_from_curriculum()
+ALL_CHAPTERS           = load_chapters_from_curriculum()
 ALL_REMAINING_CHAPTERS = [(cid, title) for cid, title in ALL_CHAPTERS
-                          if cid not in PREFILLED_IDS]
+                          if cid not in PREFILLED_IDS and cid not in EXCLUDED_IDS]
 
 # ══════════════════════════════════════════════════════════
 # BUILD EXCEL
