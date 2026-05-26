@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nucleus Content — Google Sheet Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; font-size: 13px; background: #f8f9fa; color: #202124; }
+
+  /* ── Top bar ── */
+  .topbar {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; padding: 8px 16px; border-bottom: 1px solid #e0e0e0;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .sheet-icon { font-size: 28px; }
+  .sheet-title { font-size: 18px; font-weight: 500; color: #202124; }
+  .sheet-subtitle { font-size: 11px; color: #80868b; margin-top: 2px; }
+  .badge {
+    margin-left: auto; background: #188038; color: white;
+    font-size: 11px; font-weight: bold; padding: 3px 10px; border-radius: 12px;
+  }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    background: #fff; border-bottom: 1px solid #e0e0e0;
+    padding: 4px 12px; display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #444;
+  }
+  .toolbar-btn {
+    padding: 3px 8px; border: 1px solid #dadce0; border-radius: 3px;
+    background: #fff; cursor: default; font-size: 12px; color: #444;
+  }
+  .toolbar-divider { width: 1px; height: 18px; background: #dadce0; margin: 0 4px; }
+
+  /* ── Formula bar ── */
+  .formula-bar {
+    display: flex; align-items: center; background: #fff;
+    border-bottom: 1px solid #e0e0e0; padding: 4px 8px; gap: 8px;
+  }
+  .cell-ref {
+    width: 60px; border: 1px solid #dadce0; padding: 2px 4px;
+    font-size: 12px; text-align: center; border-radius: 2px; color: #444;
+  }
+  .formula-divider { width: 1px; height: 20px; background: #dadce0; }
+  .formula-input {
+    flex: 1; border: none; font-size: 13px; color: #202124;
+    outline: none; padding: 2px 6px;
+  }
+
+  /* ── Sheet container ── */
+  .sheet-container { overflow-x: auto; overflow-y: auto; height: calc(100vh - 180px); }
+
+  /* ── Grid ── */
+  table { border-collapse: collapse; min-width: 100%; }
+  th, td {
+    border: 1px solid #e2e3e3; padding: 0; white-space: nowrap;
+    font-size: 12px;
+  }
+
+  /* Row number column */
+  .rn {
+    background: #f8f9fa; color: #80868b; text-align: center;
+    width: 40px; min-width: 40px; font-size: 11px; padding: 2px 4px;
+    border-right: 2px solid #c0c0c0; user-select: none;
+    position: sticky; left: 0; z-index: 5;
+  }
+
+  /* Column headers */
+  thead th {
+    background: #f8f9fa; color: #444; text-align: center;
+    font-weight: 500; padding: 3px 8px; font-size: 11px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  thead th.rn { z-index: 15; }
+
+  /* Header row (row 1) */
+  .header-row td {
+    background: #e8f0fe; font-weight: bold; color: #1a73e8;
+    padding: 4px 8px; font-size: 12px;
+  }
+  .header-row .rn { background: #e8f0fe; }
+
+  /* Comment rows (grey) */
+  .comment-row td { background: #f8f9fa; color: #9aa0a6; font-style: italic; padding: 3px 8px; }
+  .comment-row .rn { background: #f8f9fa; }
+
+  /* Filled data rows */
+  .filled-row td { background: #ffffff; padding: 3px 8px; max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
+  .filled-row:hover td { background: #e8f0fe22; }
+  .filled-row .rn { background: #f8f9fa; }
+
+  /* Chapter divider rows */
+  .chapter-label {
+    background: #fce8b2 !important; color: #b06000 !important;
+    font-weight: 600 !important; font-style: normal !important;
+  }
+
+  /* Blank rows */
+  .blank-row td { background: #fff; color: #bdc1c6; padding: 3px 8px; }
+  .blank-row .rn { background: #f8f9fa; }
+
+  /* Cell value wrap */
+  .cell { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 260px; }
+  .cell-wide { max-width: 380px; }
+  .cell-narrow { max-width: 120px; }
+
+  /* chapter_id chip */
+  .chid {
+    display: inline-block; background: #e8f0fe; color: #1a73e8;
+    border-radius: 3px; padding: 1px 5px; font-size: 11px; font-weight: 600;
+  }
+  .chid-science { background: #e6f4ea; color: #188038; }
+
+  /* ── Tab bar ── */
+  .tab-bar {
+    display: flex; align-items: flex-end; background: #f1f3f4;
+    border-top: 2px solid #e0e0e0; padding: 0 8px;
+    position: sticky; bottom: 0; z-index: 100;
+    overflow-x: auto;
+  }
+  .tab {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 20px 6px; cursor: pointer;
+    border-top: 3px solid transparent;
+    font-size: 12px; color: #444; white-space: nowrap;
+    border-right: 1px solid #e0e0e0;
+    transition: background 0.1s;
+  }
+  .tab.active {
+    background: #fff; border-top: 3px solid #1a73e8;
+    color: #1a73e8; font-weight: 600; border-bottom: 2px solid #fff;
+    margin-bottom: -2px;
+  }
+  .tab:not(.active):hover { background: #e8eaed; }
+  .tab-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+  /* Sheet visibility */
+  .sheet-view { display: none; }
+  .sheet-view.active { display: block; }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex; gap: 16px; padding: 6px 16px;
+    background: #fff; border-bottom: 1px solid #e0e0e0;
+    font-size: 11px; color: #444; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-swatch { width: 14px; height: 14px; border: 1px solid #ccc; border-radius: 2px; }
+  .ls-filled { background: #ffffff; }
+  .ls-blank  { background: #fff; border: 1px dashed #bdc1c6; }
+  .ls-header { background: #e8f0fe; }
+  .ls-chapter { background: #fce8b2; }
+
+  .info-banner {
+    background: #e8f0fe; border-left: 4px solid #1a73e8;
+    padding: 10px 16px; font-size: 12px; color: #1558b0;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .info-banner strong { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="sheet-icon">📊</div>
+  <div>
+    <div class="sheet-title">Nucleus Content</div>
+    <div class="sheet-subtitle">Google Sheets · 4 tabs · 78 chapters · Syncs to Nucleus app via npm run sync</div>
+  </div>
+  <div class="badge">PREVIEW</div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <span class="toolbar-btn">File</span>
+  <span class="toolbar-btn">Edit</span>
+  <span class="toolbar-btn">View</span>
+  <span class="toolbar-btn">Insert</span>
+  <div class="toolbar-divider"></div>
+  <span style="font-size:18px;">↩</span>
+  <span style="font-size:18px;">↪</span>
+  <div class="toolbar-divider"></div>
+  <span class="toolbar-btn">100%</span>
+  <div class="toolbar-divider"></div>
+  <span class="toolbar-btn" style="color:#444;font-weight:bold;">B</span>
+  <span class="toolbar-btn" style="font-style:italic;">I</span>
+  <span class="toolbar-btn" style="text-decoration:underline;">U</span>
+</div>
+
+<!-- Formula bar -->
+<div class="formula-bar">
+  <input class="cell-ref" id="cellRef" value="A1" readonly>
+  <div class="formula-divider"></div>
+  <span style="color:#5f6368;font-size:13px;">ƒ</span>
+  <input class="formula-input" id="formulaInput" value="chapter_id" readonly>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch ls-header"></div> Column headers (Row 1)</div>
+  <div class="legend-item"><div class="legend-swatch ls-filled"></div> Your filled content</div>
+  <div class="legend-item"><div class="legend-swatch ls-chapter"></div> Chapter label</div>
+  <div class="legend-item"><div class="legend-swatch ls-blank"></div> Blank rows — fill these in Google Sheets</div>
+  <div style="margin-left:auto;color:#1a73e8;font-weight:600;">
+    ✅ 3 chapters pre-filled as examples &nbsp;|&nbsp; 75 chapters ready for your content
+  </div>
+</div>
+
+<!-- Info banner -->
+<div class="info-banner">
+  <span>💡</span>
+  <span><strong>How to use:</strong> Import each CSV from <code>templates/</code> folder into the matching tab in Google Sheets.
+  Chapter IDs like <code>6-maths-1</code> tell the app exactly where to put your content.
+  Rows with empty heading/question columns are ignored by the sync script.</span>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- NOTES SHEET                                          -->
+<!-- ════════════════════════════════════════════════════ -->
+<div id="sheet-Notes" class="sheet-view active">
+<div class="sheet-container">
+<table>
+<thead>
+  <tr>
+    <th class="rn"></th>
+    <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th>
+  </tr>
+</thead>
+<tbody>
+  <!-- Row 1: headers -->
+  <tr class="header-row">
+    <td class="rn">1</td>
+    <td><span class="cell cell-narrow">chapter_id</span></td>
+    <td><span class="cell">chapter_name</span></td>
+    <td><span class="cell">heading</span></td>
+    <td><span class="cell cell-wide">body</span></td>
+    <td><span class="cell cell-wide">highlight</span></td>
+  </tr>
+  <!-- 6-maths-1 -->
+  <tr class="filled-row"><td class="rn">2</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell">What is a Pattern?</span></td><td><span class="cell cell-wide">A pattern is an arrangement of numbers or shapes that follows a fixed rule. Patterns help us predict what comes next...</span></td><td><span class="cell cell-wide">Key Idea: Every pattern has a rule. Find the rule, predict the next term.</span></td></tr>
+  <tr class="filled-row"><td class="rn">3</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell">Number Sequences</span></td><td><span class="cell cell-wide">A number sequence is a list of numbers arranged according to a rule. Examples: 2,4,6,8 (add 2 each time)...</span></td><td><span class="cell cell-wide">Triangular numbers: 1, 3, 6, 10, 15 … Formula: n(n+1)/2</span></td></tr>
+  <tr class="filled-row"><td class="rn">4</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell">Shape Patterns</span></td><td><span class="cell cell-wide">Patterns appear in geometric arrangements. Square numbers shown as dot grids. Triangular numbers form triangle arrangements...</span></td><td><span class="cell" style="color:#9aa0a6;">(empty)</span></td></tr>
+  <!-- 6-maths-2 -->
+  <tr class="filled-row"><td class="rn">5</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell">Basic Geometric Terms</span></td><td><span class="cell cell-wide">A point is an exact location in space with no size. A line extends infinitely in both directions and has no endpoints...</span></td><td><span class="cell cell-wide">Key: Line → infinite both ways | Ray → infinite one way | Line Segment → fixed length</span></td></tr>
+  <tr class="filled-row"><td class="rn">6</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell">Types of Angles</span></td><td><span class="cell cell-wide">An angle is formed when two rays share a common endpoint called the vertex. Types: Acute (0°–90°), Right (90°)...</span></td><td><span class="cell cell-wide">Acute &lt; 90° | Right = 90° | Obtuse 90°–180° | Straight = 180° | Reflex 180°–360°</span></td></tr>
+  <tr class="filled-row"><td class="rn">7</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell">Pairs of Angles</span></td><td><span class="cell cell-wide">Complementary angles sum to 90°. Supplementary angles sum to 180°. Adjacent angles share a vertex and arm...</span></td><td><span class="cell cell-wide">Complementary: sum = 90° | Supplementary: sum = 180° | Vertically opposite angles are equal</span></td></tr>
+  <tr class="filled-row"><td class="rn">8</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell">Parallel and Perpendicular Lines</span></td><td><span class="cell cell-wide">Parallel lines (AB ∥ CD) never meet — constant distance apart. Perpendicular lines (AB ⊥ CD) meet at 90°...</span></td><td><span class="cell cell-wide">Parallel lines: AB ∥ CD | Perpendicular: AB ⊥ CD | Alternate interior angles equal when lines parallel</span></td></tr>
+  <!-- 6-maths-3 -->
+  <tr class="filled-row"><td class="rn">9</td><td><span class="chid">6-maths-3</span></td><td><span class="cell">Number Play</span></td><td><span class="cell">Numbers in Everyday Life</span></td><td><span class="cell cell-wide">Numbers are all around us — in prices, phone numbers, dates, scores. Digits are the ten symbols (0–9)...</span></td><td><span class="cell cell-wide">Place value = Digit × Position value | Face value = the digit itself</span></td></tr>
+  <tr class="filled-row"><td class="rn">10</td><td><span class="chid">6-maths-3</span></td><td><span class="cell">Number Play</span></td><td><span class="cell">Number Tricks and Divisibility</span></td><td><span class="cell cell-wide">Divisibility rules: by 2 (last digit even), by 3 (digit sum divisible by 3), by 5 (ends in 0 or 5)...</span></td><td><span class="cell cell-wide">Kaprekar constant = 6174 — reached by any 4-digit number within 7 steps</span></td></tr>
+  <tr class="filled-row"><td class="rn">11</td><td><span class="chid">6-maths-3</span></td><td><span class="cell">Number Play</span></td><td><span class="cell">Palindromes and Special Numbers</span></td><td><span class="cell cell-wide">A palindrome reads the same forwards and backwards (e.g., 121, 1331). Trick: Take any number, reverse digits, add...</span></td><td><span class="cell cell-wide">Palindrome: reads same both ways | Armstrong: 153 = 1³+5³+3³</span></td></tr>
+  <tr class="filled-row"><td class="rn">12</td><td><span class="chid">6-maths-3</span></td><td><span class="cell">Number Play</span></td><td><span class="cell">Estimation and Rounding</span></td><td><span class="cell cell-wide">Estimation means finding an approximate value. Rounding rules: look at digit to the right — if ≥5 round up...</span></td><td><span class="cell cell-wide">Round digit ≥ 5 → round up | Round digit &lt; 5 → round down</span></td></tr>
+  <!-- Blank chapters -->
+  <tr class="blank-row"><td class="rn">13</td><td><span class="chid" style="background:#fce8b2;color:#b06000;">6-maths-4</span></td><td><span class="cell">Data Handling and Presentation</span></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+  <tr class="blank-row"><td class="rn">14</td><td><span class="chid" style="background:#fce8b2;color:#b06000;">6-maths-4</span></td><td><span class="cell">Data Handling and Presentation</span></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+  <tr class="blank-row"><td class="rn">15</td><td><span class="chid" style="background:#fce8b2;color:#b06000;">6-maths-4</span></td><td><span class="cell">Data Handling and Presentation</span></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+  <tr class="blank-row"><td class="rn">16</td><td><span class="chid" style="background:#fce8b2;color:#b06000;">6-maths-4</span></td><td><span class="cell">Data Handling and Presentation</span></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+  <tr style="background:#f8f9fa;"><td class="rn" colspan="6" style="text-align:center;color:#9aa0a6;font-size:11px;padding:4px;border:1px solid #e0e0e0;">
+    ··· 75 more chapters (6-maths-5 through 8-science-12) continue below with blank rows ready to fill ···
+  </td></tr>
+  <tr class="blank-row"><td class="rn">…</td><td><span class="chid chid-science">6-science-1</span></td><td><span class="cell">The Wonderful World of Science</span></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+  <tr class="blank-row"><td class="rn">…</td><td><span class="chid" style="background:#fce8b2;color:#b06000;">7-maths-1</span></td><td><span class="cell">Large Numbers Around Us</span></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SNIPPETS SHEET                                        -->
+<!-- ════════════════════════════════════════════════════ -->
+<div id="sheet-Snippets" class="sheet-view">
+<div class="sheet-container">
+<table>
+<thead>
+  <tr>
+    <th class="rn"></th>
+    <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+  </tr>
+</thead>
+<tbody>
+  <tr class="header-row">
+    <td class="rn">1</td>
+    <td><span class="cell cell-narrow">chapter_id</span></td>
+    <td><span class="cell">chapter_name</span></td>
+    <td><span class="cell">term</span></td>
+    <td><span class="cell cell-wide">definition</span></td>
+    <td><span class="cell">formula</span></td>
+    <td><span class="cell">example</span></td>
+  </tr>
+  <!-- 6-maths-1 snippets -->
+  <tr class="filled-row"><td class="rn">2</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell" style="font-weight:600;">Pattern</span></td><td><span class="cell cell-wide">An arrangement that follows a fixed rule and can be extended predictably.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">2, 4, 6, 8 — rule: add 2</span></td></tr>
+  <tr class="filled-row"><td class="rn">3</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell" style="font-weight:600;">Sequence</span></td><td><span class="cell cell-wide">An ordered list of numbers or objects following a rule.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">1, 4, 9, 16, 25 (perfect squares)</span></td></tr>
+  <tr class="filled-row"><td class="rn">4</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell" style="font-weight:600;">Triangular Number</span></td><td><span class="cell cell-wide">Numbers that can form a triangular dot arrangement.</span></td><td><span class="cell">Tn = n(n+1)/2</span></td><td><span class="cell">T4 = 4×5/2 = 10</span></td></tr>
+  <tr class="filled-row"><td class="rn">5</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell" style="font-weight:600;">Square Number</span></td><td><span class="cell cell-wide">The product of a number multiplied by itself.</span></td><td><span class="cell">n² = n × n</span></td><td><span class="cell">4² = 16</span></td></tr>
+  <tr class="filled-row"><td class="rn">6</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell" style="font-weight:600;">Fibonacci Sequence</span></td><td><span class="cell cell-wide">A sequence where each term is the sum of the two previous terms starting from 1, 1.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">1, 1, 2, 3, 5, 8, 13, 21 …</span></td></tr>
+  <tr class="filled-row"><td class="rn">7</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell" style="font-weight:600;">Even Numbers</span></td><td><span class="cell cell-wide">Numbers divisible by 2.</span></td><td><span class="cell">2n</span></td><td><span class="cell">2, 4, 6, 8, 10 …</span></td></tr>
+  <tr class="filled-row"><td class="rn">8</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell" style="font-weight:600;">Odd Numbers</span></td><td><span class="cell cell-wide">Numbers not divisible by 2.</span></td><td><span class="cell">2n − 1</span></td><td><span class="cell">1, 3, 5, 7, 9 …</span></td></tr>
+  <tr class="filled-row"><td class="rn">9</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td><span class="cell" style="font-weight:600;">Pascal's Triangle</span></td><td><span class="cell cell-wide">A triangular arrangement where each entry is the sum of the two entries above it.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">Row 3: 1, 3, 3, 1</span></td></tr>
+  <!-- 6-maths-2 snippets -->
+  <tr class="filled-row"><td class="rn">10</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell" style="font-weight:600;">Point</span></td><td><span class="cell cell-wide">An exact location in space with no size, no length, no width.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">Tip of a pencil</span></td></tr>
+  <tr class="filled-row"><td class="rn">11</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell" style="font-weight:600;">Line Segment</span></td><td><span class="cell cell-wide">Part of a line with two definite endpoints and a measurable length.</span></td><td><span class="cell">Length AB = |A - B|</span></td><td><span class="cell">The edge of a ruler</span></td></tr>
+  <tr class="filled-row"><td class="rn">12</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell" style="font-weight:600;">Ray</span></td><td><span class="cell cell-wide">Part of a line that starts at one endpoint and extends infinitely in one direction.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">A beam of light from a torch</span></td></tr>
+  <tr class="filled-row"><td class="rn">13</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell" style="font-weight:600;">Complementary Angles</span></td><td><span class="cell cell-wide">Two angles whose measures add up to exactly 90°.</span></td><td><span class="cell">∠A + ∠B = 90°</span></td><td><span class="cell">30° and 60° are complementary</span></td></tr>
+  <tr class="filled-row"><td class="rn">14</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell" style="font-weight:600;">Supplementary Angles</span></td><td><span class="cell cell-wide">Two angles whose measures add up to exactly 180°.</span></td><td><span class="cell">∠A + ∠B = 180°</span></td><td><span class="cell">110° and 70° are supplementary</span></td></tr>
+  <tr class="filled-row"><td class="rn">15</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td><span class="cell" style="font-weight:600;">Vertically Opposite Angles</span></td><td><span class="cell cell-wide">Angles formed opposite each other when two lines intersect — always equal.</span></td><td><span class="cell">∠1 = ∠3, ∠2 = ∠4</span></td><td><span class="cell">When scissors blades cross</span></td></tr>
+  <!-- 6-maths-3 snippets -->
+  <tr class="filled-row"><td class="rn">16</td><td><span class="chid">6-maths-3</span></td><td><span class="cell">Number Play</span></td><td><span class="cell" style="font-weight:600;">Place Value</span></td><td><span class="cell cell-wide">The value of a digit based on its position in the number.</span></td><td><span class="cell">Digit × positional value</span></td><td><span class="cell">In 5476, place value of 4 is 400</span></td></tr>
+  <tr class="filled-row"><td class="rn">17</td><td><span class="chid">6-maths-3</span></td><td><span class="cell">Number Play</span></td><td><span class="cell" style="font-weight:600;">Face Value</span></td><td><span class="cell cell-wide">The actual value of a digit, regardless of its position.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">In 5476, face value of 4 is always 4</span></td></tr>
+  <tr class="filled-row"><td class="rn">18</td><td><span class="chid">6-maths-3</span></td><td><span class="cell">Number Play</span></td><td><span class="cell" style="font-weight:600;">Palindrome</span></td><td><span class="cell cell-wide">A number that reads the same forwards and backwards.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">121, 1331, 99, 12321</span></td></tr>
+  <tr class="filled-row"><td class="rn">19</td><td><span class="chid">6-maths-3</span></td><td><span class="cell">Number Play</span></td><td><span class="cell" style="font-weight:600;">Kaprekar's Constant</span></td><td><span class="cell cell-wide">The number 6174, reached by any 4-digit number after repeated Kaprekar operations.</span></td><td><span class="cell" style="color:#9aa0a6;">(none)</span></td><td><span class="cell">9981 → ... → 6174</span></td></tr>
+  <!-- Blanks -->
+  <tr style="background:#f8f9fa;"><td class="rn" colspan="7" style="text-align:center;color:#9aa0a6;font-size:11px;padding:4px;border:1px solid #e0e0e0;">
+    ··· Blank rows continue for all 75 remaining chapters (6-maths-4 through 8-science-12) ···
+  </td></tr>
+  <tr class="blank-row"><td class="rn">…</td><td><span class="chid" style="background:#fce8b2;color:#b06000;">6-maths-4</span></td><td><span class="cell">Data Handling and Presentation</span></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+  <tr class="blank-row"><td class="rn">…</td><td><span class="chid chid-science">6-science-1</span></td><td><span class="cell">The Wonderful World of Science</span></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- MCQ SHEET                                            -->
+<!-- ════════════════════════════════════════════════════ -->
+<div id="sheet-MCQ" class="sheet-view">
+<div class="sheet-container">
+<table>
+<thead>
+  <tr>
+    <th class="rn"></th>
+    <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th>
+  </tr>
+</thead>
+<tbody>
+  <tr class="header-row">
+    <td class="rn">1</td>
+    <td><span class="cell cell-narrow">chapter_id</span></td>
+    <td><span class="cell">chapter_name</span></td>
+    <td><span class="cell cell-narrow">worksheet</span></td>
+    <td><span class="cell cell-wide">question</span></td>
+    <td><span class="cell">option_a</span></td>
+    <td><span class="cell">option_b</span></td>
+    <td><span class="cell">option_c</span></td>
+    <td><span class="cell">option_d</span></td>
+    <td><span class="cell cell-narrow" style="color:#188038;font-weight:700;">answer</span></td>
+    <td><span class="cell cell-wide">explanation</span></td>
+  </tr>
+  <!-- 6-maths-1 WS1 -->
+  <tr class="filled-row"><td class="rn">2</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td style="text-align:center;font-weight:700;background:#e8f4fd;">1</td><td><span class="cell cell-wide">What is the next number in the sequence: 1, 4, 9, 16, __?</span></td><td>20</td><td>25</td><td>24</td><td>21</td><td style="text-align:center;font-weight:700;color:#188038;">B</td><td><span class="cell cell-wide">This is the sequence of perfect squares: 1², 2², 3², 4², 5² = 25</span></td></tr>
+  <tr class="filled-row"><td class="rn">3</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td style="text-align:center;font-weight:700;background:#e8f4fd;">1</td><td><span class="cell cell-wide">The 5th triangular number is:</span></td><td>10</td><td>12</td><td>15</td><td>8</td><td style="text-align:center;font-weight:700;color:#188038;">C</td><td><span class="cell cell-wide">T5 = 5×6/2 = 15. Triangular numbers: 1, 3, 6, 10, 15</span></td></tr>
+  <tr class="filled-row"><td class="rn">4</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td style="text-align:center;font-weight:700;background:#e8f4fd;">1</td><td><span class="cell cell-wide">Which of these is a Fibonacci number?</span></td><td>14</td><td>13</td><td>11</td><td>16</td><td style="text-align:center;font-weight:700;color:#188038;">B</td><td><span class="cell cell-wide">Fibonacci: 1,1,2,3,5,8,13,21… 13 is a Fibonacci number</span></td></tr>
+  <tr class="filled-row" style="opacity:0.7;"><td class="rn">5–11</td><td colspan="9" style="text-align:center;color:#9aa0a6;font-size:11px;">… 7 more Worksheet 1 MCQ rows for 6-maths-1 …</td></tr>
+  <!-- WS2 sample -->
+  <tr class="filled-row" style="background:#f0f9ff;"><td class="rn">12</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td style="text-align:center;font-weight:700;background:#dbeafe;">2</td><td><span class="cell cell-wide">Assertion: Square numbers always end in 0,1,4,5,6,9. Reason: These are the only possible units digits of n².</span></td><td>Both A&R true, R explains A</td><td>Both true, R doesn't explain A</td><td>A true, R false</td><td>Both false</td><td style="text-align:center;font-weight:700;color:#188038;">A</td><td><span class="cell cell-wide">Correct — squaring any digit 0-9 gives these units digits only.</span></td></tr>
+  <tr class="filled-row" style="opacity:0.7;"><td class="rn">13–21</td><td colspan="9" style="text-align:center;color:#9aa0a6;font-size:11px;">… 9 more Worksheet 2 Assertion-Reason rows for 6-maths-1 …</td></tr>
+  <!-- 6-maths-2 MCQ sample -->
+  <tr class="filled-row"><td class="rn">22</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td style="text-align:center;font-weight:700;background:#e8f4fd;">1</td><td><span class="cell cell-wide">An angle measuring 145° is called:</span></td><td>Acute</td><td>Right</td><td>Obtuse</td><td>Reflex</td><td style="text-align:center;font-weight:700;color:#188038;">C</td><td><span class="cell cell-wide">Angles between 90° and 180° are obtuse. 145° lies in this range.</span></td></tr>
+  <tr class="filled-row"><td class="rn">23</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td style="text-align:center;font-weight:700;background:#e8f4fd;">1</td><td><span class="cell cell-wide">The complement of 37° is:</span></td><td>143°</td><td>53°</td><td>63°</td><td>47°</td><td style="text-align:center;font-weight:700;color:#188038;">B</td><td><span class="cell cell-wide">Complement = 90° − 37° = 53°</span></td></tr>
+  <tr class="filled-row" style="opacity:0.7;"><td class="rn">24–61</td><td colspan="9" style="text-align:center;color:#9aa0a6;font-size:11px;">… remaining 6-maths-2 and 6-maths-3 MCQ rows (38 more) …</td></tr>
+  <!-- Blanks -->
+  <tr style="background:#f8f9fa;"><td class="rn" colspan="11" style="text-align:center;color:#9aa0a6;font-size:11px;padding:4px;border:1px solid #e0e0e0;">
+    ··· Blank rows for all 75 remaining chapters — 20 rows each (10 per worksheet) ···
+  </td></tr>
+  <tr class="blank-row"><td class="rn">…</td><td><span class="chid" style="background:#fce8b2;color:#b06000;">6-maths-4</span></td><td><span class="cell">Data Handling and Presentation</span></td><td style="background:#fffde7;text-align:center;">1</td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- QA SHEET                                             -->
+<!-- ════════════════════════════════════════════════════ -->
+<div id="sheet-QA" class="sheet-view">
+<div class="sheet-container">
+<table>
+<thead>
+  <tr>
+    <th class="rn"></th>
+    <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+  </tr>
+</thead>
+<tbody>
+  <tr class="header-row">
+    <td class="rn">1</td>
+    <td><span class="cell cell-narrow">chapter_id</span></td>
+    <td><span class="cell">chapter_name</span></td>
+    <td><span class="cell cell-narrow">worksheet</span></td>
+    <td><span class="cell cell-wide">question</span></td>
+    <td><span class="cell cell-wide">answer</span></td>
+    <td><span class="cell cell-narrow">type</span></td>
+  </tr>
+  <!-- 6-maths-1 QA -->
+  <tr class="filled-row"><td class="rn">2</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td style="text-align:center;font-weight:700;background:#e8f4fd;">1</td><td><span class="cell cell-wide">What is a pattern? Give two examples from daily life.</span></td><td><span class="cell cell-wide">A pattern is an arrangement that follows a fixed rule. Examples: (1) Days of the week repeat Mon, Tue… (2) Traffic lights follow Red → Green → Yellow → Red.</span></td><td style="text-align:center;color:#1a73e8;font-weight:600;">short</td></tr>
+  <tr class="filled-row"><td class="rn">3</td><td><span class="chid">6-maths-1</span></td><td><span class="cell">Patterns in Mathematics</span></td><td style="text-align:center;font-weight:700;background:#e8f4fd;">1</td><td><span class="cell cell-wide">Write the first 6 triangular numbers and show how they are formed.</span></td><td><span class="cell cell-wide">Triangular numbers: 1, 3, 6, 10, 15, 21. Formed by: T1=1, T2=1+2=3, T3=1+2+3=6... Formula: Tn = n(n+1)/2.</span></td><td style="text-align:center;color:#1a73e8;font-weight:600;">short</td></tr>
+  <tr class="filled-row" style="opacity:0.7;"><td class="rn">4–11</td><td colspan="5" style="text-align:center;color:#9aa0a6;font-size:11px;">… 8 more QA rows for 6-maths-1 (3 more WS1, 5 WS2) …</td></tr>
+  <!-- 6-maths-2 QA sample -->
+  <tr class="filled-row"><td class="rn">12</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td style="text-align:center;font-weight:700;background:#e8f4fd;">1</td><td><span class="cell cell-wide">Define a line segment and a ray. How are they different from a line?</span></td><td><span class="cell cell-wide">A line segment has two endpoints and fixed length. A ray has one endpoint and extends infinitely. A line has no endpoints and extends infinitely both ways.</span></td><td style="text-align:center;color:#1a73e8;font-weight:600;">short</td></tr>
+  <tr class="filled-row"><td class="rn">13</td><td><span class="chid">6-maths-2</span></td><td><span class="cell">Lines and Angles</span></td><td style="text-align:center;font-weight:700;background:#dbeafe;">2</td><td><span class="cell cell-wide">Explain with examples the angles formed when a transversal cuts two parallel lines.</span></td><td><span class="cell cell-wide">When a transversal crosses two parallel lines, 8 angles form. Corresponding angles are equal. Alternate interior angles are equal. Co-interior angles are supplementary (sum=180°)…</span></td><td style="text-align:center;color:#f59e0b;font-weight:600;">long</td></tr>
+  <tr class="filled-row" style="opacity:0.7;"><td class="rn">14–41</td><td colspan="5" style="text-align:center;color:#9aa0a6;font-size:11px;">… remaining 6-maths-2 and 6-maths-3 QA rows (28 more) …</td></tr>
+  <!-- Blanks -->
+  <tr style="background:#f8f9fa;"><td class="rn" colspan="7" style="text-align:center;color:#9aa0a6;font-size:11px;padding:4px;border:1px solid #e0e0e0;">
+    ··· Blank rows for all 75 remaining chapters — 10 rows each (5 per worksheet) ···
+  </td></tr>
+  <tr class="blank-row"><td class="rn">…</td><td><span class="chid" style="background:#fce8b2;color:#b06000;">6-maths-4</span></td><td><span class="cell">Data Handling and Presentation</span></td><td style="background:#fffde7;text-align:center;">1</td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;text-align:center;">short</td></tr>
+  <tr class="blank-row"><td class="rn">…</td><td><span class="chid chid-science">6-science-1</span></td><td><span class="cell">The Wonderful World of Science</span></td><td style="background:#fffde7;text-align:center;">1</td><td style="background:#fffde7;"></td><td style="background:#fffde7;"></td><td style="background:#fffde7;text-align:center;">short</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- TAB BAR                                              -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('Notes', this)">
+    <span class="tab-dot" style="background:#4285f4;"></span> Notes
+    <span style="font-size:10px;color:#999;margin-left:4px;">311 rows</span>
+  </div>
+  <div class="tab" onclick="switchTab('Snippets', this)">
+    <span class="tab-dot" style="background:#34a853;"></span> Snippets
+    <span style="font-size:10px;color:#999;margin-left:4px;">624 rows</span>
+  </div>
+  <div class="tab" onclick="switchTab('MCQ', this)">
+    <span class="tab-dot" style="background:#ea4335;"></span> MCQ
+    <span style="font-size:10px;color:#999;margin-left:4px;">1560 rows</span>
+  </div>
+  <div class="tab" onclick="switchTab('QA', this)">
+    <span class="tab-dot" style="background:#fbbc04;"></span> QA
+    <span style="font-size:10px;color:#999;margin-left:4px;">780 rows</span>
+  </div>
+  <div style="margin-left:auto;padding:8px 16px;font-size:11px;color:#80868b;">
+    📋 Import CSVs from <code>templates/</code> folder into each tab &nbsp;→&nbsp;
+    <code style="background:#e8f0fe;color:#1a73e8;padding:2px 6px;border-radius:3px;">npm run sync</code>
+  </div>
+</div>
+
+<script>
+function switchTab(name, el) {
+  document.querySelectorAll('.sheet-view').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sheet-' + name).classList.add('active');
+  el.classList.add('active');
+
+  // Update formula bar
+  const labels = {
+    Notes: 'chapter_id',
+    Snippets: 'chapter_id',
+    MCQ: 'chapter_id',
+    QA: 'chapter_id'
+  };
+  document.getElementById('formulaInput').value = labels[name] || '';
+  document.getElementById('cellRef').value = 'A1';
+}
+
+// Row click → update formula bar
+document.querySelectorAll('td').forEach(td => {
+  td.addEventListener('click', function() {
+    const val = this.innerText.trim();
+    if (val) {
+      document.getElementById('formulaInput').value = val;
+    }
+  });
+});
+</script>
+</body>
+</html>
