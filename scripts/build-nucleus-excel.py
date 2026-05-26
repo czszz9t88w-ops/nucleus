@@ -387,84 +387,26 @@ QA_DATA = [
      "Estimation is a PROCESS; approximation is the RESULT of that process.","long"],
 ]
 
-# All 78 chapter IDs for blank rows
-ALL_REMAINING_CHAPTERS = [
-    ("6-maths-4","Data Handling and Presentation"),
-    ("6-maths-5","Prime Time"),
-    ("6-maths-6","Perimeter and Area"),
-    ("6-maths-7","Fractions"),
-    ("6-maths-8","Playing with Constructions"),
-    ("6-maths-9","Symmetry"),
-    ("6-maths-10","The Other Side of Zero"),
-    ("6-science-1","The Wonderful World of Science"),
-    ("6-science-2","Diversity in the Living World"),
-    ("6-science-3","Mindful Eating: A Path to a Healthy Body"),
-    ("6-science-4","Seeing Without Touching"),
-    ("6-science-5","A Journey Through States of Matter"),
-    ("6-science-6","Nature's Treasure"),
-    ("6-science-7","Temperature and its Measurement"),
-    ("6-science-8","A Treat for Mosquitoes"),
-    ("6-science-9","From Mud to Pot"),
-    ("6-science-10","Wonders of Light"),
-    ("7-maths-1","Large Numbers Around Us"),
-    ("7-maths-2","Fractions and Decimals"),
-    ("7-maths-3","Playing with Numbers"),
-    ("7-maths-4","Ratio and Proportion"),
-    ("7-maths-5","Simple Equations"),
-    ("7-maths-6","Lines and Angles"),
-    ("7-maths-7","The Triangle and Its Properties"),
-    ("7-maths-8","Congruence of Triangles"),
-    ("7-maths-9","Data Handling"),
-    ("7-maths-10","Perimeter and Area"),
-    ("7-maths-11","Exponents and Powers"),
-    ("7-maths-12","Symmetry"),
-    ("7-maths-13","Visualising Solid Shapes"),
-    ("7-science-1","Nutrition in Plants"),
-    ("7-science-2","Nutrition in Animals"),
-    ("7-science-3","Fibre to Fabric"),
-    ("7-science-4","Heat"),
-    ("7-science-5","Acids, Bases and Salts"),
-    ("7-science-6","Physical and Chemical Changes"),
-    ("7-science-7","Respiration in Organisms"),
-    ("7-science-8","Transportation in Animals and Plants"),
-    ("7-science-9","Reproduction in Plants"),
-    ("7-science-10","Motion and Time"),
-    ("7-science-11","Electric Current and Its Effects"),
-    ("7-science-12","Light"),
-    ("7-science-13","Water: A Precious Resource"),
-    ("8-maths-1","Rational Numbers"),
-    ("8-maths-2","Linear Equations in One Variable"),
-    ("8-maths-3","Understanding Quadrilaterals"),
-    ("8-maths-4","Practical Geometry"),
-    ("8-maths-5","Data Handling"),
-    ("8-maths-6","Squares and Square Roots"),
-    ("8-maths-7","Cubes and Cube Roots"),
-    ("8-maths-8","Comparing Quantities"),
-    ("8-maths-9","Algebraic Expressions and Identities"),
-    ("8-maths-10","Visualising Solid Shapes"),
-    ("8-maths-11","Mensuration"),
-    ("8-maths-12","Exponents and Powers"),
-    ("8-maths-13","Direct and Inverse Proportions"),
-    ("8-maths-14","Factorisation"),
-    ("8-maths-15","Introduction to Graphs"),
-    ("8-maths-16","Playing with Numbers"),
-    ("8-science-1","Crop Production and Management"),
-    ("8-science-2","Microorganisms: Friend and Foe"),
-    ("8-science-3","Synthetic Fibres and Plastics"),
-    ("8-science-4","Materials: Metals and Non-Metals"),
-    ("8-science-5","Coal and Petroleum"),
-    ("8-science-6","Combustion and Flame"),
-    ("8-science-7","Conservation of Plants and Animals"),
-    ("8-science-8","Cell — Structure and Functions"),
-    ("8-science-9","Reproduction in Animals"),
-    ("8-science-10","Reaching the Age of Adolescence"),
-    ("8-science-11","Force and Pressure"),
-    ("8-science-12","Friction"),
-    ("8-science-13","Sound"),
-    ("8-science-14","Chemical Effects of Electric Current"),
-    ("8-science-15","Some Natural Phenomena"),
-    ("8-science-16","Light"),
-]
+# Read chapter list directly from curriculum.ts — always in sync with the app.
+# Pre-filled chapters (have sample content already): skip them from blank rows.
+PREFILLED_IDS = {"6-maths-1", "6-maths-2", "6-maths-3"}
+
+def load_chapters_from_curriculum():
+    import re, os
+    curriculum_path = os.path.join(os.path.dirname(__file__), "..", "data", "curriculum.ts")
+    with open(curriculum_path, encoding="utf-8") as f:
+        content = f.read()
+    chapters = []
+    for line in content.splitlines():
+        id_m    = re.search(r'id:\s*"([^"]+)"', line)
+        title_m = re.search(r'title:\s*"([^"]+)"', line)
+        if id_m and title_m:
+            chapters.append((id_m.group(1), title_m.group(1)))
+    return chapters
+
+ALL_CHAPTERS          = load_chapters_from_curriculum()
+ALL_REMAINING_CHAPTERS = [(cid, title) for cid, title in ALL_CHAPTERS
+                          if cid not in PREFILLED_IDS]
 
 # ══════════════════════════════════════════════════════════
 # BUILD EXCEL
