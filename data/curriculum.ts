@@ -25,16 +25,18 @@ const chapters: Chapter[] = [
   { id: "6-maths-10", classNum: 6, subject: "maths",   num: 10, title: "The Other Side of Zero",         emoji: "0️⃣", videoId: "7dn8KFqQ6iY" },
 
   // ── CLASS 6 SCIENCE (Curiosity 2025) ─────────────────────────
-  { id: "6-science-1",  classNum: 6, subject: "science", num: 1,  title: "The Wonderful World of Science",         emoji: "🔭", videoId: "9RMHBgGSida" },
-  { id: "6-science-2",  classNum: 6, subject: "science", num: 2,  title: "Diversity in the Living World",          emoji: "🌿", videoId: "1cBpsyHvDhg" },
-  { id: "6-science-3",  classNum: 6, subject: "science", num: 3,  title: "Mindful Eating: A Path to a Healthy Body", emoji: "🥗", videoId: "c-4oqAHHQDQ" },
-  { id: "6-science-4",  classNum: 6, subject: "science", num: 4,  title: "Seeing Without Touching",                emoji: "🧲", videoId: "hFAOXdXZ5TM" },
-  { id: "6-science-5",  classNum: 6, subject: "science", num: 5,  title: "A Journey Through States of Matter",     emoji: "💧", videoId: "3AWKMjHJuLk" },
-  { id: "6-science-6",  classNum: 6, subject: "science", num: 6,  title: "Nature's Treasure",                      emoji: "🌳", videoId: "b7Dg4yVWDz8" },
-  { id: "6-science-7",  classNum: 6, subject: "science", num: 7,  title: "Temperature and its Measurement",        emoji: "🌡️", videoId: "L6IcV8LQWZQ" },
-  { id: "6-science-8",  classNum: 6, subject: "science", num: 8,  title: "A Treat for Mosquitoes",                 emoji: "🦟", videoId: "jJn0VKyCIoI" },
-  { id: "6-science-9",  classNum: 6, subject: "science", num: 9,  title: "From Mud to Pot",                        emoji: "🏺", videoId: "5oqfMoB5nkQ" },
-  { id: "6-science-10", classNum: 6, subject: "science", num: 10, title: "Wonders of Light",                       emoji: "💡", videoId: "J4MBzEYhaBg" },
+  { id: "6-science-1",  classNum: 6, subject: "science", num: 1,  title: "The Wonderful World of Science",                  emoji: "🔭", videoId: "9RMHBgGSida" },
+  { id: "6-science-2",  classNum: 6, subject: "science", num: 2,  title: "Diversity in the Living World",                   emoji: "🌿", videoId: "1cBpsyHvDhg" },
+  { id: "6-science-3",  classNum: 6, subject: "science", num: 3,  title: "Mindful Eating: A Path to a Healthy Body",        emoji: "🥗", videoId: "c-4oqAHHQDQ" },
+  { id: "6-science-4",  classNum: 6, subject: "science", num: 4,  title: "Exploring Magnets",                               emoji: "🧲", videoId: "hFAOXdXZ5TM" },
+  { id: "6-science-5",  classNum: 6, subject: "science", num: 5,  title: "Measurement of Length and Motion",                emoji: "📏", videoId: "5oqfMoB5nkQ" },
+  { id: "6-science-6",  classNum: 6, subject: "science", num: 6,  title: "Materials Around Us",                             emoji: "🪨", videoId: "3AWKMjHJuLk" },
+  { id: "6-science-7",  classNum: 6, subject: "science", num: 7,  title: "Temperature and its Measurement",                 emoji: "🌡️", videoId: "L6IcV8LQWZQ" },
+  { id: "6-science-8",  classNum: 6, subject: "science", num: 8,  title: "A Journey through States of Water",               emoji: "💧", videoId: "3AWKMjHJuLk" },
+  { id: "6-science-9",  classNum: 6, subject: "science", num: 9,  title: "Methods of Separation in Everyday Life",          emoji: "🧪", videoId: "b7Dg4yVWDz8" },
+  { id: "6-science-10", classNum: 6, subject: "science", num: 10, title: "Living Creatures: Exploring their Characteristics", emoji: "🌿", videoId: "1cBpsyHvDhg" },
+  { id: "6-science-11", classNum: 6, subject: "science", num: 11, title: "Nature's Treasures",                               emoji: "🌳", videoId: "b7Dg4yVWDz8" },
+  { id: "6-science-12", classNum: 6, subject: "science", num: 12, title: "Beyond Earth",                                    emoji: "🌍", videoId: "J4MBzEYhaBg" },
 
   // ── CLASS 7 MATHS (Ganita Prakash 2026) ──────────────────────
   { id: "7-maths-1",  classNum: 7, subject: "maths",   num: 1,  title: "Large Numbers Around Us",        emoji: "🔢", videoId: "3En_SfpFkmo" },
