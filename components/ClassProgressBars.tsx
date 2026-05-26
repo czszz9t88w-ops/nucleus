@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getProgress } from "@/lib/progress";
+import chapters from "@/data/curriculum";
 
 const subjectConfig = {
   maths:   { icon: "🔢", label: "Mathematics", book: "Ganita Prakash 2026", color: "#7C3AED" },
@@ -10,10 +11,9 @@ const subjectConfig = {
 
 interface Props {
   cls: number;
-  chapterCounts: { maths: number; science: number };
 }
 
-export default function ClassProgressBars({ cls, chapterCounts }: Props) {
+export default function ClassProgressBars({ cls }: Props) {
   const [visited, setVisited] = useState<string[]>([]);
 
   useEffect(() => {
@@ -24,9 +24,9 @@ export default function ClassProgressBars({ cls, chapterCounts }: Props) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {(["maths", "science"] as const).map((sub) => {
         const s = subjectConfig[sub];
-        const total = chapterCounts[sub];
-        const done = Array.from({ length: total }, (_, i) => `${cls}-${sub}-${i + 1}`)
-          .filter((id) => visited.includes(id)).length;
+        const subChapters = chapters.filter((c) => c.classNum === cls && c.subject === sub);
+        const total = subChapters.length;
+        const done = subChapters.filter((c) => visited.includes(c.id)).length;
         const pct = total ? Math.round((done / total) * 100) : 0;
 
         return (

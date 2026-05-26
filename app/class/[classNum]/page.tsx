@@ -18,7 +18,6 @@ export default async function ClassPage({ params }: { params: Promise<{ classNum
   const { classNum } = await params;
   const cls = parseInt(classNum);
   const meta = classMeta[classNum];
-  const chapterCounts = cls === 6 ? { maths: 10, science: 10 } : cls === 7 ? { maths: 13, science: 13 } : { maths: 16, science: 16 };
 
   return (
     <div className="relative min-h-screen pb-24 md:pb-10 overflow-hidden page-bg">
@@ -61,7 +60,7 @@ export default async function ClassPage({ params }: { params: Promise<{ classNum
           </div>
 
           {/* Subject cards */}
-          <ClassProgressBars cls={cls} chapterCounts={chapterCounts} />
+          <ClassProgressBars cls={cls} />
 
           {/* Tip */}
           <div className="glass-card rounded-xl p-4 flex items-center gap-3 mt-5">
